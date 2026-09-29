@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Matildalgebra">
+<meta name="theme-color" content="#2e4a3d">
+<title>Matildalgebra</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='3' width='20' height='26' rx='2' fill='%23c8553d'/%3E%3Crect x='9' y='3' width='3' height='26' fill='%23e9b53c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Schoolbell&display=swap" rel="stylesheet">
+<style>
+/* Miss Honey's classroom: a chalkboard for the question, a paper desk for the picture, honey for anything you can tap.
+   Deliberately a single warm light theme; no characters are drawn, the story lives in the words. */
+:root{
+  color-scheme: light;
+  --paper:#f6eedd; --paper-2:#fffaf0; --paper-3:#efe3c8; --line:#d9c7a3;
+  --ink:#2b2320; --ink-dim:#6d5f55;
+  --wood:#8a5a36; --wood-dark:#5e3b21;
+  --board:#2e4a3d; --board-2:#253d32; --chalk:#f6f3ea; --chalk-dim:#b8c9bd;
+  --honey:#e9b53c; --honey-dark:#a8750f; --honey-soft:#fbe7b5;
+  --good:#2f8a4c; --good-chalk:#a6ecb4; --miss:#b9472f; --miss-chalk:#ffb6a3;
+  --tens:#3b78c4; --ones:#e0902a;
+  --body:"Andika","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --chalkfont:"Schoolbell","Andika",cursive;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{
+  margin:0;font-family:var(--body);font-size:18px;line-height:1.45;color:var(--ink);
+  background:var(--paper);
+  background-image:radial-gradient(circle at 1px 1px,rgba(94,59,33,.07) 1px,transparent 0);background-size:22px 22px;
+  padding:max(14px,env(safe-area-inset-top)) 16px max(32px,env(safe-area-inset-bottom));min-height:100vh;
+}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--honey-dark);outline-offset:3px}
+.wrap{max-width:1040px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+
+/* chalkboard (shared) */
+.chalkboard{
+  background:radial-gradient(120% 90% at 30% 20%,#35574a,var(--board) 55%,var(--board-2));
+  color:var(--chalk);border:10px solid var(--wood);border-radius:14px;
+  box-shadow:inset 0 0 0 2px var(--wood-dark),inset 0 0 40px rgba(0,0,0,.35),0 6px 0 var(--wood-dark),0 10px 24px rgba(60,35,15,.2);
+  position:relative;
+}
+
+/* ---------- home ---------- */
+.hero{padding:22px 22px 26px;text-align:center}
+.hero h1{font-family:var(--chalkfont);font-weight:400;font-size:clamp(2.6rem,9vw,4.4rem);line-height:1;margin:0;letter-spacing:.02em;text-shadow:0 0 1px rgba(255,255,255,.6)}
+.hero p{margin:10px 0 0;color:var(--chalk-dim);font-size:1.05rem}
+.hero .ledge{position:absolute;left:14%;right:14%;bottom:-10px;height:10px;background:var(--wood-dark);border-radius:0 0 6px 6px}
+.hero .chalkstick{position:absolute;right:18%;bottom:-6px;width:34px;height:7px;background:#fff;border-radius:3px;transform:rotate(-4deg)}
+
+.section-title{font-family:var(--chalkfont);font-size:1.7rem;margin:4px 0 0;color:var(--wood-dark);font-weight:400}
+.lessons{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.lesson{
+  display:flex;flex-direction:column;gap:10px;text-align:left;padding:16px;border-radius:16px;
+  background:var(--paper-2);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);position:relative;min-width:0;
+}
+.lesson .go{all:unset;cursor:pointer;display:flex;gap:14px;align-items:center}
+.lesson .go:focus-visible{outline:3px solid var(--honey-dark);outline-offset:6px;border-radius:8px}
+.lesson:hover{border-color:var(--honey)}
+.lesson .icon{flex:0 0 64px;height:64px;border-radius:12px;background:var(--board);display:grid;place-items:center}
+.lesson .icon svg{width:48px;height:48px}
+.lesson h3{margin:0;font-size:1.2rem;line-height:1.2}
+.lesson p{margin:2px 0 0;color:var(--ink-dim);font-size:.95rem}
+.lesson.test{background:#fff3f0;border-color:#e8b9ac;box-shadow:0 4px 0 #e8b9ac}
+.lesson.test:hover{border-color:var(--miss)}
+.levelrow{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px dashed var(--line);padding-top:8px;font-size:.85rem;color:var(--ink-dim)}
+.dots{display:flex;gap:5px;align-items:center}
+.dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--honey-dark)}
+.dots i.on{background:var(--honey)}
+.lvbtns{display:flex;gap:6px}
+.lvbtns button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--paper);font-weight:700;line-height:1}
+.lvbtns button:disabled{opacity:.35;cursor:default}
+
+.library{background:var(--paper-2);border:2px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.library header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 16px}
+.library h2{margin:0;font-family:var(--chalkfont);font-weight:400;font-size:1.7rem;color:var(--wood-dark)}
+.library .count{font-weight:700;color:var(--ink-dim)}
+.shelf{display:flex;flex-wrap:wrap;align-items:flex-end;gap:2px;padding:8px 8px 0;min-height:64px;border-bottom:10px solid var(--wood);border-radius:4px;background:linear-gradient(#f1e4c8,#eadbb9)}
+.spine{width:12px;border-radius:2px 2px 0 0;position:relative;box-shadow:inset -2px 0 0 rgba(0,0,0,.15)}
+.spine::after{content:"";position:absolute;left:2px;right:2px;top:8px;height:3px;background:rgba(255,255,255,.55);border-radius:1px}
+.shelf .more{align-self:center;margin-left:8px;font-size:.85rem;color:var(--ink-dim);font-weight:700}
+.shelf .empty{align-self:center;color:var(--ink-dim);font-size:.95rem;padding-bottom:10px}
+.foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;color:var(--ink-dim);font-size:.9rem}
+.toggle{border:1px solid var(--line);background:var(--paper-2);border-radius:999px;padding:6px 14px;font-weight:700;font-size:.9rem}
+.toggle[aria-pressed="true"]{background:var(--honey-soft);border-color:var(--honey-dark)}
+
+/* ---------- play ---------- */
+.playtop{display:flex;align-items:center;gap:10px}
+.back{flex:0 0 auto;border:1px solid var(--line);background:var(--paper-2);border-radius:10px;padding:8px 12px;font-weight:700;font-size:.95rem}
+.playtop h2{margin:0;font-size:clamp(.95rem,4vw,1.15rem);line-height:1.2;flex:1 1 0;min-width:0}
+.speak{flex:0 0 auto;border:2px solid var(--honey-dark);background:var(--honey-soft);border-radius:12px;width:48px;height:44px;display:grid;place-items:center}
+.speak svg{width:24px;height:24px}
+.progress{display:flex;gap:5px;align-items:flex-end;height:44px;padding:0 6px;border-bottom:8px solid var(--wood);border-radius:3px;width:100%}
+.progress .slot{flex:1 1 0;max-width:30px;height:18px;border:2px dashed var(--line);border-bottom:none;border-radius:4px 4px 0 0;transition:height .3s}
+.progress .slot.now{border-color:var(--honey-dark)}
+.progress .slot.book{height:40px;border:none;box-shadow:inset -3px 0 0 rgba(0,0,0,.15);animation:drop .45s cubic-bezier(.3,1.6,.6,1)}
+.progress .slot.star{position:relative}
+.progress .slot.star::after{content:"★";position:absolute;inset:auto 0 4px;text-align:center;color:#fff6d8;font-size:.75rem;line-height:1}
+.progress .slot.missed{height:14px;background:var(--paper-3);border:none}
+@keyframes drop{0%{transform:translateY(-30px);opacity:0}100%{transform:none;opacity:1}}
+
+.stage{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:860px){.stage{grid-template-columns:minmax(0,1.35fr) minmax(290px,.9fr);align-items:start}}
+.left{display:flex;flex-direction:column;gap:14px;min-width:0}
+.right{display:flex;flex-direction:column;gap:12px;min-width:0}
+
+.board{container-type:inline-size;padding:14px 14px 18px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;overflow:hidden}
+.lead{margin:0;font-family:var(--chalkfont);font-size:clamp(1.3rem,4.6vw,1.7rem);color:var(--chalk-dim);text-align:center;line-height:1.2}
+.eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25em .32em;font-weight:700;font-size:clamp(2rem,12cqi,4rem);line-height:1.1;font-variant-numeric:tabular-nums;max-width:100%}
+.eq .op{color:var(--chalk-dim)}
+.eq .w{font-size:.5em;font-weight:400;color:var(--chalk-dim)}
+.eq .sep{color:var(--chalk-dim);margin-left:-.2em}
+.eq.seq{font-size:clamp(1.6rem,9cqi,3.2rem)}
+.blank{
+  min-width:1.7em;height:1.3em;padding:0 .15em;border:3px dashed var(--chalk);border-radius:10px;background:rgba(255,255,255,.04);
+  display:inline-grid;place-items:center;color:var(--chalk);font:inherit;line-height:1;transition:border-color .2s,background .2s,box-shadow .2s;
+}
+.blank.active{border-style:solid;border-color:var(--honey);box-shadow:0 0 0 4px rgba(233,181,60,.3),0 0 22px rgba(233,181,60,.35);background:rgba(233,181,60,.1)}
+.blank.active:empty::after{content:"";width:3px;height:.8em;background:var(--honey);animation:blink 1s steps(2) infinite}
+.blank.ok{border-style:solid;border-color:var(--good-chalk);color:var(--good-chalk);box-shadow:none}
+.blank.bad{border-style:solid;border-color:var(--miss-chalk);color:var(--miss-chalk);animation:wobble .4s}
+.blank.shown{border-style:solid;border-color:var(--honey);color:var(--honey)}
+.blank.sym{min-width:1.3em}
+@keyframes blink{50%{opacity:0}}
+@keyframes wobble{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+
+.magic{position:absolute;inset:0;display:grid;place-items:center;background:rgba(37,61,50,.92);pointer-events:none;opacity:0;transition:opacity .25s}
+.magic.on{opacity:1}
+.magic p{margin:0;font-family:var(--chalkfont);font-size:clamp(1.8rem,7vw,2.8rem);text-align:center;padding:0 12px;line-height:1.15}
+.magic p span{opacity:0;animation:write .01s forwards}
+.magic small{display:block;font-family:var(--body);font-size:1rem;color:var(--chalk-dim);margin-top:6px;opacity:0;animation:write .3s forwards}
+@keyframes write{to{opacity:1}}
+.magic .stick{position:absolute;width:44px;height:9px;background:#fff;border-radius:4px;box-shadow:0 0 12px rgba(255,255,255,.6);left:10%;top:62%;animation:float 1.6s ease-in-out forwards}
+@keyframes float{0%{transform:translate(0,0) rotate(-20deg)}30%{transform:translate(20vw,-30px) rotate(10deg)}60%{transform:translate(40vw,10px) rotate(-12deg)}100%{transform:translate(55vw,-20px) rotate(8deg);opacity:.2}}
+
+.desk{background:var(--paper-2);border:2px solid var(--line);border-radius:16px;padding:10px;display:flex;justify-content:center}
+.desk svg{max-width:100%;height:auto;max-height:28vh;display:block}
+.feedback{margin:0;min-height:1.5em;text-align:center;font-weight:700;font-size:1.15rem}
+.feedback.good{color:var(--good)}
+.feedback.bad{color:var(--miss)}
+
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.key{height:clamp(50px,7vh,64px);border-radius:14px;border:2px solid var(--line);background:var(--paper-2);font-size:1.9rem;font-weight:700;box-shadow:0 4px 0 var(--line);transition:transform .06s,box-shadow .06s}
+.key:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.key.del{font-size:1.5rem;color:var(--ink-dim)}
+.key.check{grid-column:1/-1;background:var(--honey);border-color:var(--honey-dark);box-shadow:0 4px 0 var(--honey-dark);font-size:1.35rem}
+.key.check:active{box-shadow:0 1px 0 var(--honey-dark)}
+.key:disabled{opacity:.45;cursor:default}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.choice{min-height:96px;border-radius:14px;border:2px solid var(--line);background:var(--paper-2);box-shadow:0 4px 0 var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.choice b{font-size:2.4rem;line-height:1}
+.choice small{font-size:.85rem;color:var(--ink-dim)}
+.choice:disabled{opacity:.35;cursor:default}
+.choice.right{border-color:var(--good);background:#e6f5ea;opacity:1}
+
+.explain{border:2px solid var(--honey-dark);background:var(--honey-soft);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.explain h3{margin:0;font-size:1.25rem}
+.explain p{margin:0}
+.explain .pic{background:var(--paper-2);border-radius:12px;padding:10px;display:flex;justify-content:center}
+.explain .pic svg{max-width:100%;height:auto}
+.btn{color:var(--ink);border:2px solid var(--honey-dark);background:var(--honey);border-radius:14px;padding:14px 18px;font-weight:700;font-size:1.2rem;box-shadow:0 4px 0 var(--honey-dark)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--honey-dark)}
+.btn.plain{background:var(--paper-2);border-color:var(--line);box-shadow:0 4px 0 var(--line)}
+
+/* ---------- round end ---------- */
+.done{padding:26px 18px 30px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.done h2{margin:0;font-family:var(--chalkfont);font-weight:400;font-size:clamp(2rem,7vw,3rem);line-height:1.1}
+.done .big{font-size:3.4rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.done .big small{font-size:1.3rem;color:var(--chalk-dim)}
+.done p{margin:0;color:var(--chalk-dim);max-width:36ch}
+.done .lvup{color:var(--honey);font-weight:700}
+.done svg{width:150px;height:auto}
+.donebtns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="home" class="wrap" style="gap:18px">
+  <header class="chalkboard hero">
+    <h1>Matildalgebra</h1>
+    <p>Maths lessons in Miss Honey's classroom</p>
+    <div class="ledge"></div><div class="chalkstick"></div>
+  </header>
+
+  <h2 class="section-title">Pick a lesson</h2>
+  <div class="lessons" id="lessons"></div>
+
+  <section class="library" aria-label="Your library">
+    <header><h2>Your library</h2><span class="count" id="book-count"></span></header>
+    <div class="shelf" id="shelf"></div>
+  </section>
+
+  <div class="foot">
+    <button class="toggle" id="speak-toggle" aria-pressed="true">Read questions aloud: on</button>
+    <span>Grown-ups: use the − and + on each lesson to change the level.</span>
+  </div>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="wrap" style="gap:14px" hidden>
+  <div class="playtop">
+    <button class="back" id="back">← Lessons</button>
+    <h2 id="play-title"></h2>
+    <button class="speak" id="say-again" aria-label="Read the question again">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5e3b21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#e9b53c"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+    </button>
+  </div>
+  <div class="progress" id="progress" aria-label="Books earned this lesson"></div>
+
+  <div class="stage">
+    <div class="left">
+      <div class="chalkboard board" id="board">
+        <p class="lead" id="lead"></p>
+        <div class="eq" id="eq" aria-live="polite"></div>
+        <div class="magic" id="magic"></div>
+      </div>
+      <div class="desk" id="desk"></div>
+    </div>
+    <div class="right">
+      <p class="feedback" id="feedback"></p>
+      <div class="pad" id="pad">
+        <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
+        <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+        <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
+        <button class="key del" data-k="del" aria-label="Delete">⌫</button><button class="key" data-k="0">0</button><button class="key del" data-k="clear" aria-label="Clear">Clear</button>
+        <button class="key check" data-k="check" id="check">Check</button>
+      </div>
+      <div class="choices" id="choices" hidden></div>
+      <div class="explain" id="explain" hidden></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROUND END -->
+<section id="end" class="wrap" hidden>
+  <div class="chalkboard done" id="done"></div>
+</section>
+
+</div>
+
+<script>
+'use strict';
+/* ================= utilities ================= */
+const $ = id => document.getElementById(id);
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+const MINUS = '−';
+const BOOK_COLOURS = ['#c8553d', '#3b78c4', '#2f8a4c', '#8e4fa8', '#e0902a', '#1f6f78', '#b0413e', '#556b2f', '#d1a02a', '#6a4c93'];
+const bookColour = i => BOOK_COLOURS[(i * 7 + 3) % BOOK_COLOURS.length];
+const bookHeight = i => 40 + ((i * 13) % 5) * 5;
+
+/* ================= storage ================= */
+const KEY = 'matildalgebra.v1';
+let S = { books: 0, levels: { pv: 1, nl: 1, count: 1, add: 1 }, speak: true };
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) S = { ...S, ...s, levels: { ...S.levels, ...(s.levels || {}) } }; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+/* ================= speech ================= */
+let voice = null;
+function pickVoice() {
+  if (!('speechSynthesis' in window)) return;
+  const vs = speechSynthesis.getVoices();
+  voice = vs.find(v => v.lang === 'en-GB' && /Serena|Kate|Martha|Stephanie|Female|Libby|Sonia/i.test(v.name)) || vs.find(v => v.lang === 'en-GB') || vs.find(v => /^en/.test(v.lang)) || null;
+}
+if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function say(text, force) {
+  if (!('speechSynthesis' in window) || (!S.speak && !force) || !text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-GB'; if (voice) u.voice = voice; u.rate = .9; u.pitch = 1.05;
+  speechSynthesis.speak(u);
+}
+const spokenOp = t => t === '+' ? 'plus' : t === MINUS ? 'take away' : t === '=' ? 'equals' : t;
+
+/* ================= drawings ================= */
+// Base-ten blocks: tens as sticks of ten, ones as single cubes.
+function blocksSVG(n, opts = {}) {
+  const t = Math.floor(n / 10), o = n % 10, u = opts.u || 13, g = 7;
+  let x = 4, s = '';
+  for (let i = 0; i < t; i++) {
+    s += `<rect x="${x}" y="4" width="${u}" height="${u * 10}" rx="2" fill="var(--tens)" stroke="#23507f" stroke-width="1.5"/>`;
+    for (let k = 1; k < 10; k++) s += `<line x1="${x}" x2="${x + u}" y1="${4 + k * u}" y2="${4 + k * u}" stroke="#23507f" stroke-width="1" opacity=".6"/>`;
+    x += u + g;
+  }
+  const tensW = x;
+  if (o) x += t ? 12 : 0;
+  const ox = x;
+  for (let j = 0; j < o; j++) {
+    const col = Math.floor(j / 5), row = j % 5;
+    s += `<rect x="${ox + col * (u + 4)}" y="${4 + u * 10 - (row + 1) * (u + 4) + 4}" width="${u}" height="${u}" rx="2" fill="var(--ones)" stroke="#9a5f12" stroke-width="1.5"/>`;
+  }
+  if (o) x = ox + (o > 5 ? 2 : 1) * (u + 4);
+  const W = Math.max(x + 4, o ? ox + 58 : 0, t ? tensW + 4 : 0, 60), H = u * 10 + (opts.labels === false ? 10 : 34);
+  let lab = '';
+  if (opts.labels !== false) {
+    if (t) lab += `<text x="${tensW / 2}" y="${u * 10 + 28}" text-anchor="middle" font-size="15" font-weight="700" fill="var(--tens)">${plural(t, 'ten', 'tens')}</text>`;
+    if (o) lab += `<text x="${(ox + x) / 2}" y="${u * 10 + 28}" text-anchor="middle" font-size="15" font-weight="700" fill="#b86f10">${plural(o, 'one', 'ones')}</text>`;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="font-family:var(--body)" role="img" aria-label="${plural(t, 'ten', 'tens')} and ${plural(o, 'one', 'ones')}">${s}${lab}</svg>`;
+}
+
+// Number line. ticks: values; labels: values to print; arrow: value; jumps: [{from,to,label}]; marks: values with a dot.
+function lineSVG({ min, max, ticks = [], labels = [], arrow = null, arrowText = null, jumps = [], marks = [], hideEndArrows }) {
+  const W = 640, P = 34, jumpH = jumps.length ? 84 : 0, arrowH = arrow !== null ? (arrowText !== null ? 92 : 64) : 12;
+  const y = 20 + Math.max(jumpH, arrowH); let H = y + 56;
+  const X = v => P + (v - min) / (max - min) * (W - 2 * P);
+  const ink = '#2b2320';
+  let s = `<line x1="${P - 16}" x2="${W - P + 16}" y1="${y}" y2="${y}" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>`;
+  if (!hideEndArrows) {
+    s += `<path d="M${P - 18} ${y} l8 -6 v12z M${W - P + 18} ${y} l-8 -6 v12z" fill="${ink}"/>`;
+  }
+  const L = new Set(labels);
+  for (const v of ticks) {
+    const big = L.has(v);
+    s += `<line x1="${X(v)}" x2="${X(v)}" y1="${y - (big ? 11 : 7)}" y2="${y + (big ? 11 : 7)}" stroke="${ink}" stroke-width="${big ? 2.5 : 1.6}"/>`;
+  }
+  const fs = labels.length > 12 ? 17 : 25;
+  // Stagger labels onto a second row when neighbours would overlap (e.g. 78 and 79 on a long jump line).
+  let lastX = -1e9, row2 = false;
+  for (const v of labels.slice().sort((p, q) => p - q)) {
+    const lx = X(v), clash = lx - lastX < fs * 1.8;
+    const ly = y + 44 + (clash ? 26 : 0);
+    if (clash) { row2 = true; s += `<line x1="${lx}" x2="${lx}" y1="${y + 12}" y2="${ly - fs + 2}" stroke="${ink}" stroke-width="1" opacity=".4"/>`; lastX = -1e9; } else lastX = lx;
+    s += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="${ink}">${v}</text>`;
+  }
+  if (row2) H += 26;
+  for (const j of jumps) {
+    const a = X(j.from), b = X(j.to), h = Math.min(58, 24 + Math.abs(b - a) * .3), m = (a + b) / 2;
+    const col = j.to > j.from ? '#3b78c4' : '#b9472f';
+    s += `<path d="M${a} ${y - 4} Q${m} ${y - 4 - h * 2} ${b} ${y - 6}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linecap="round"/>`;
+    const dir = b > a ? -1 : 1;
+    s += `<path d="M${b} ${y - 5} l${dir * 9} -7 M${b} ${y - 5} l${dir * 2} -11" stroke="${col}" stroke-width="2.5" stroke-linecap="round" fill="none"/>`;
+    s += `<text x="${m}" y="${y - h - 12}" text-anchor="middle" font-size="23" font-weight="700" fill="${col}">${j.label}</text>`;
+  }
+  for (const v of marks) s += `<circle cx="${X(v)}" cy="${y}" r="5" fill="#e9b53c" stroke="${ink}" stroke-width="1.5"/>`;
+  if (arrow !== null) {
+    const ax = X(arrow);
+    s += `<path d="M${ax} ${y - 6} l-16 -22 h10 v-30 h12 v30 h10z" fill="#e9b53c" stroke="#a8750f" stroke-width="2" stroke-linejoin="round"/>`;
+    if (arrowText !== null) s += `<text x="${ax}" y="${y - 66}" text-anchor="middle" font-size="26" font-weight="700" fill="#a8750f">${arrowText}</text>`;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="font-family:var(--body)" role="img" aria-label="Number line from ${min} to ${max}">${s}</svg>`;
+}
+const range = (a, b, step) => { const r = []; for (let v = a; v <= b + 1e-9; v += step) r.push(v); return r; };
+
+// Jumps along an empty number line: tens first, then ones, bridging through the next ten where needed (White Rose style).
+function jumpPlan(start, delta) {
+  const sg = Math.sign(delta), d = Math.abs(delta), tens = Math.floor(d / 10) * 10, ones = d % 10, sym = sg > 0 ? '+' : MINUS;
+  const J = []; let cur = start;
+  const push = n => { J.push({ from: cur, to: cur + sg * n, label: sym + n }); cur += sg * n; };
+  if (tens) { if (tens <= 40) for (let i = 0; i < tens / 10; i++) push(10); else push(tens); }
+  if (ones) {
+    const toTen = sg > 0 ? (10 - cur % 10) % 10 : cur % 10;
+    if (toTen && ones > toTen) { push(toTen); push(ones - toTen); } else push(ones);
+  }
+  return J;
+}
+function jumpLine(start, delta) {
+  const J = jumpPlan(start, delta);
+  const pts = [start, ...J.map(j => j.to)];
+  const lo = Math.min(...pts), hi = Math.max(...pts), pad = Math.max(2, (hi - lo) * .08);
+  return lineSVG({ min: lo - pad, max: hi + pad, ticks: pts, labels: pts, jumps: J, marks: [start], hideEndArrows: true });
+}
+
+/* ================= question generators =================
+   A question: { lead, tokens:[string|number|{a,tol}|{choice:true}], say, visual, explain(), choices?, answer? } */
+const B = (a, tol = 0) => ({ a, tol });
+
+function genPV(level) {
+  const t = rnd(1, 9);
+  let o = rnd(1, 9);
+  if (level > 1 && Math.random() < .12) o = 0;
+  const n = t * 10 + o;
+  const forms = level === 1 ? ['A', 'A', 'B', 'C'] : level === 2 ? ['A', 'B', 'C', 'D', 'E', 'CMP'] : ['A', 'B', 'D', 'F', 'F', 'G', 'CMP', 'CMP'];
+  let f = pick(forms);
+  if (f === 'F' && t < 2) f = 'A';
+  if ((f === 'A' || f === 'B') && o === 0) f = 'D';
+  const showBlocks = level < 3;
+  const tensWords = plural(t, 'ten', 'tens'), onesWords = plural(o, 'one', 'ones');
+  const why = () => `<div class="pic">${blocksSVG(n)}</div><p><b>${n}</b> is ${tensWords} and ${onesWords}. ${t} ${t === 1 ? 'ten is' : 'tens make'} ${t * 10}${o ? `, and ${onesWords} ${o === 1 ? 'is' : 'make'} ${o}` : ''}.</p>`;
+  const q = { visual: showBlocks ? blocksSVG(n) : '', explain: why, lead: 'Fill in the missing number' };
+  switch (f) {
+    case 'A': q.tokens = [n, '=', t * 10, '+', B(o)]; break;
+    case 'B': q.tokens = [n, '=', B(t * 10), '+', o]; break;
+    case 'C': q.tokens = [B(n), '=', t * 10, '+', o]; break;
+    case 'D': q.lead = 'How many tens and ones?'; q.tokens = [n, '=', B(t), { w: t === 1 ? 'ten and' : 'tens and' }, B(o), { w: 'ones' }];
+      q.say = `${n}. How many tens, and how many ones?`; break;
+    case 'E': q.lead = 'What number is this?'; q.tokens = [t, { w: t === 1 ? 'ten and' : 'tens and' }, o, { w: o === 1 ? 'one' : 'ones' }, '=', B(n)];
+      q.say = `${tensWords} and ${onesWords} makes what number?`; break;
+    case 'G': q.tokens = [o, '+', t * 10, '=', B(n)]; break;
+    case 'F': {
+      const flexible = Math.random() < .5;
+      q.lead = 'Split it a different way';
+      q.tokens = flexible ? [n, '=', (t - 1) * 10, '+', B(o + 10)] : [n, '=', B((t - 1) * 10), '+', o + 10];
+      q.explain = () => `<div class="pic">${blocksSVG(n)}</div><p><b>${n}</b> is ${tensWords} and ${onesWords}. Swap one ten for ten ones and you get ${plural(t - 1, 'ten', 'tens')} and ${o + 10} ones.</p><p>So ${n} = ${(t - 1) * 10} + ${o + 10}.</p>`;
+      break;
+    }
+    case 'CMP': return genCompare(level);
+  }
+  return q;
+}
+
+function genCompare(level) {
+  let a = rnd(11, 99), b;
+  const r = Math.random();
+  if (r < .15) b = a;
+  else if (level >= 3 || r < .5) { b = Math.floor(a / 10) * 10 + rnd(0, 9); if (b === a) b = a < 99 ? a + 1 : a - 1; }
+  else { b = rnd(11, 99); if (b === a) b = a + (a < 99 ? 1 : -1); }
+  if (Math.random() < .5) [a, b] = [b, a];
+  const ans = a < b ? '<' : a > b ? '>' : '=';
+  const word = { '<': 'less than', '>': 'more than', '=': 'equal to' };
+  const ta = Math.floor(a / 10), tb = Math.floor(b / 10);
+  return {
+    lead: 'More, less or the same?',
+    tokens: [a, { choice: true }, b],
+    choices: [{ v: '<', label: '<', sub: 'less than' }, { v: '>', label: '>', sub: 'more than' }, { v: '=', label: '=', sub: 'equal to' }],
+    answer: ans,
+    say: `Is ${a} more than, less than, or equal to ${b}?`,
+    visual: level < 3 ? `<div style="display:flex;gap:26px;align-items:flex-end;justify-content:center;flex-wrap:wrap">${blocksSVG(a, { u: 10 })}${blocksSVG(b, { u: 10 })}</div>` : '',
+    explain: () => {
+      let why;
+      if (a === b) why = `They are the same number, so ${a} = ${b}.`;
+      else if (ta !== tb) why = `Look at the tens first. ${a} has ${plural(ta, 'ten', 'tens')} and ${b} has ${plural(tb, 'ten', 'tens')}.`;
+      else why = `They both have ${plural(ta, 'ten', 'tens')}, so look at the ones: ${a % 10} and ${b % 10}.`;
+      return `<p><b>${a} ${ans} ${b}</b>: ${a} is ${word[ans]} ${b}.</p><p>${why}</p><p>The open mouth of the sign always faces the bigger number.</p>`;
+    }
+  };
+}
+
+function genNL(level) {
+  let cfg, ans, tol = 0, lead = 'What number is the arrow pointing to?';
+  const kind = pick(level === 1 ? ['20', '20', '100s'] : level === 2 ? ['seg', 'seg', 'fives', 'half50'] : ['est', 'est', 'mid', 'seg2']);
+  if (kind === '20') { ans = pick(range(1, 19, 1).filter(v => v % 5)); cfg = { min: 0, max: 20, ticks: range(0, 20, 1), labels: [0, 5, 10, 15, 20] }; }
+  if (kind === '100s') { ans = pick([10, 30, 50, 70, 90]); cfg = { min: 0, max: 100, ticks: range(0, 100, 10), labels: range(0, 100, 20) }; }
+  if (kind === 'seg') { const s = 10 * rnd(1, 8); ans = s + rnd(1, 9); cfg = { min: s, max: s + 10, ticks: range(s, s + 10, 1), labels: [s, s + 10] }; }
+  if (kind === 'fives') { ans = 10 * rnd(0, 9) + 5; cfg = { min: 0, max: 100, ticks: range(0, 100, 5), labels: range(0, 100, 10) }; }
+  if (kind === 'half50') { ans = 5 * rnd(1, 9); cfg = { min: 0, max: 50, ticks: range(0, 50, 5), labels: [0, 50] }; }
+  if (kind === 'est') { do { ans = rnd(6, 94); } while (Math.abs(ans - 50) < 4); tol = 6; lead = 'Roughly what number is the arrow pointing to?'; cfg = { min: 0, max: 100, ticks: [0, 50, 100], labels: [0, 50, 100] }; }
+  if (kind === 'mid') { ans = 10 * rnd(1, 8) + 5; cfg = { min: 0, max: 100, ticks: range(0, 100, 10), labels: [0, 100] }; }
+  if (kind === 'seg2') { const s = 10 * rnd(0, 8); ans = s + 2 * rnd(1, 9); cfg = { min: s, max: s + 20, ticks: range(s, s + 20, 2), labels: [s, s + 20] }; }
+  const step = cfg.ticks.length > 1 ? cfg.ticks[1] - cfg.ticks[0] : 0;
+  return {
+    lead, tokens: [B(ans, tol)],
+    say: lead,
+    visual: lineSVG({ ...cfg, arrow: ans }),
+    explain: () => {
+      const full = kind === 'est'
+        ? lineSVG({ min: 0, max: 100, ticks: range(0, 100, 10), labels: range(0, 100, 10), arrow: ans, arrowText: ans })
+        : lineSVG({ ...cfg, labels: cfg.ticks.length <= 21 ? cfg.ticks : range(cfg.min, cfg.max, 10), arrow: ans, arrowText: ans });
+      const how = kind === 'est'
+        ? `The arrow is at <b>${ans}</b>. Anything from ${ans - tol} to ${ans + tol} is a good guess. Halfway is 50, so start there and think: is it nearer 0, 50 or 100?`
+        : `Each little mark is worth <b>${step}</b>. Count on from the nearest number you know: the arrow is at <b>${ans}</b>.`;
+      return `<div class="pic">${full}</div><p>${how}</p>`;
+    }
+  };
+}
+
+function genCount(level) {
+  const step = pick(level === 3 ? [10, 5, 2, 3, 10, 5] : [10, 5, 2]);
+  const len = 5;
+  const maxV = { 10: 100, 5: level === 1 ? 50 : 100, 2: level === 1 ? 20 : 50, 3: 36 }[step];
+  let start;
+  if (step === 10 && level >= 2 && Math.random() < .5) start = rnd(1, 9) + 10 * rnd(0, 5);
+  else start = step * rnd(0, Math.floor(maxV / step) - (len - 1));
+  let seq = Array.from({ length: len }, (_, i) => start + i * step);
+  const back = level >= 2 && Math.random() < .4;
+  if (back) seq.reverse();
+  let blanks;
+  if (level < 3) blanks = [rnd(level === 1 ? 2 : 1, len - 1)];
+  else { const opts = shuffle([0, 1, 2, 3, 4]); blanks = opts.slice(0, 2); }
+  const tokens = [];
+  seq.forEach((v, i) => { if (i) tokens.push({ sep: ',' }); tokens.push(blanks.includes(i) ? B(v) : v); });
+  const verb = back ? 'Count back' : 'Count';
+  const lead = `${verb} in ${step}s`;
+  const hopLine = labelled => {
+    const lo = Math.min(...seq), hi = Math.max(...seq), pad = step * .4;
+    const J = seq.slice(1).map((v, i) => ({ from: seq[i], to: v, label: (back ? MINUS : '+') + step }));
+    return lineSVG({ min: lo - pad, max: hi + pad, ticks: seq, labels: labelled ? seq : seq.filter((_, i) => !blanks.includes(i)), jumps: J, hideEndArrows: true });
+  };
+  return {
+    lead, tokens, seq: true,
+    say: `${lead}. ` + seq.map((v, i) => blanks.includes(i) ? 'what number' : v).join(', '),
+    visual: level < 3 ? hopLine(false) : '',
+    explain: () => `<div class="pic">${hopLine(true)}</div><p>Each jump is ${back ? 'back ' : ''}<b>${step}</b>. ${seq.join(', ')}.</p>`
+  };
+}
+
+function genAdd(level) {
+  const L1 = ['add20', 'add20', 'bond10', 'sub20', 'sub20'];
+  const L2 = ['add10s', 'sub10s', 'add1d', 'sub1d', 'bond100', 'add1d', 'sub1d'];
+  const L3 = ['addCross', 'subCross', 'add2d', 'sub2d', 'missing', 'addCross', 'subCross', 'add2dCross'];
+  const kind = pick(level === 1 ? L1 : level === 2 ? L2 : L3);
+  let a, b, op = '+', tokens, explainText;
+  const sum = (x, y) => x + y;
+  switch (kind) {
+    case 'add20': a = rnd(2, 12); b = rnd(1, Math.min(9, 20 - a)); break;
+    case 'sub20': a = rnd(6, 20); b = rnd(1, Math.min(9, a - 1)); op = MINUS; break;
+    case 'bond10': { a = rnd(1, 9); tokens = [a, '+', B(10 - a), '=', 10];
+      return mk(tokens, `${a} plus what number equals 10?`, jumpLine(a, 10 - a), `${a} and ${10 - a} make 10. Count on from ${a} to 10.`); }
+    case 'bond100': { const t = rnd(1, 9) * 10; tokens = [t, '+', B(100 - t), '=', 100];
+      return mk(tokens, `${t} plus what number equals 100?`, jumpLine(t, 100 - t), `${t / 10} and ${10 - t / 10} make 10, so ${t} and ${100 - t} make 100.`); }
+    case 'add10s': b = 10 * rnd(1, 3); a = rnd(11, 99 - b); break;
+    case 'sub10s': b = 10 * rnd(1, 3); a = rnd(b + 1, 99); op = MINUS; break;
+    case 'add1d': { const t = rnd(1, 8), o = rnd(0, 7); a = t * 10 + o; b = rnd(1, 9 - o); if (a < 10) a += 10; break; }
+    case 'sub1d': { const t = rnd(1, 9), o = rnd(2, 9); a = t * 10 + o; b = rnd(1, o); op = MINUS; break; }
+    case 'addCross': { const t = rnd(1, 8), o = rnd(3, 9); a = t * 10 + o; b = rnd(10 - o + 1, 9); break; }
+    case 'subCross': { const t = rnd(2, 9), o = rnd(0, 7); a = t * 10 + o; b = rnd(o + 1, 9); op = MINUS; break; }
+    case 'add2d': { const o1 = rnd(0, 8); a = rnd(1, 6) * 10 + o1; b = rnd(1, 8 - Math.floor(a / 10)) * 10 + rnd(1, 9 - o1); if (b % 10 === 0) b += 1; break; }
+    case 'sub2d': { const t1 = rnd(3, 9), o1 = rnd(2, 9); a = t1 * 10 + o1; b = rnd(1, t1 - 1) * 10 + rnd(1, o1); op = MINUS; break; }
+    case 'add2dCross': { const o1 = rnd(4, 9); a = rnd(1, 5) * 10 + o1; const o2 = rnd(10 - o1, 9); b = rnd(1, 8 - Math.floor(a / 10)) * 10 + o2; break; }
+    case 'missing': { const t = rnd(2, 8), o = rnd(0, 5); b = rnd(2, 9 - o); const c = t * 10 + o + b; const x = c - b;
+      tokens = [B(x), '+', b, '=', c];
+      return mk(tokens, `What number plus ${b} equals ${c}?`, jumpLine(c, -b), `Work backwards: ${c} take away ${b} is ${x}. Check it: ${x} + ${b} = ${c}.`); }
+  }
+  const c = op === '+' ? a + b : a - b;
+  tokens = [a, op, b, '=', B(c)];
+  const J = jumpPlan(a, op === '+' ? b : -b);
+  explainText = J.length > 1
+    ? `Start at ${a}. ` + J.map(j => `Jump ${j.label.replace(MINUS, 'back ').replace('+', '')} to ${j.to}.`).join(' ') + ` The answer is <b>${c}</b>.`
+    : `Start at ${a} and ${op === '+' ? 'count on' : 'count back'} ${b}. You land on <b>${c}</b>.`;
+  return mk(tokens, `${a} ${spokenOp(op)} ${b} equals what number?`, jumpLine(a, op === '+' ? b : -b), explainText);
+
+  function mk(tokens, sayText, pic, text) {
+    return { lead: op === MINUS ? 'Take away' : 'Work it out', tokens, say: sayText, visual: '', explain: () => `<div class="pic">${pic}</div><p>${text}</p>` };
+  }
+}
+
+/* ================= lessons ================= */
+const ICONS = {
+  pv: `<svg viewBox="0 0 48 48"><g fill="#3b78c4" stroke="#f6f3ea" stroke-width="1.2"><rect x="6" y="6" width="7" height="36" rx="1"/><rect x="16" y="6" width="7" height="36" rx="1"/></g><g fill="#e0902a" stroke="#f6f3ea" stroke-width="1.2"><rect x="28" y="35" width="7" height="7" rx="1"/><rect x="28" y="26" width="7" height="7" rx="1"/><rect x="37" y="35" width="7" height="7" rx="1"/></g></svg>`,
+  nl: `<svg viewBox="0 0 48 48" stroke="#f6f3ea" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M3 32h42M8 27v10M18 29v6M28 29v6M38 27v10"/><path d="M28 24l-5-7h3v-9h4v9h3z" fill="#e9b53c" stroke="#e9b53c" stroke-width="1"/></svg>`,
+  count: `<svg viewBox="0 0 48 48" fill="none" stroke-linecap="round"><path d="M3 38h42" stroke="#f6f3ea" stroke-width="2.5"/><path d="M6 36q7-18 14 0M20 36q7-18 14 0M34 36q5-13 10 -1" stroke="#e9b53c" stroke-width="2.5"/></svg>`,
+  add: `<svg viewBox="0 0 48 48" stroke="#f6f3ea" stroke-width="4" stroke-linecap="round"><path d="M14 8v16M6 16h16M28 34h16"/><path d="M26 12h0" stroke="#e9b53c"/></svg>`,
+  test: `<svg viewBox="0 0 48 48"><path d="M8 28h32v12H8z" fill="#5a3320"/><path d="M8 28q16-10 32 0" fill="#7a4a2c"/><path d="M8 30q4 4 8 0t8 0t8 0t8 0" fill="none" stroke="#3a1f12" stroke-width="2"/><path d="M24 12v8" stroke="#f6f3ea" stroke-width="2.5"/><path d="M24 8q3 3 0 5q-3-2 0-5z" fill="#e9b53c"/></svg>`
+};
+const LESSONS = [
+  { id: 'pv', name: 'Tens and Ones', blurb: '54 = 50 + ☐', gen: genPV },
+  { id: 'nl', name: 'Number Lines', blurb: 'Where is the arrow pointing?', gen: genNL },
+  { id: 'count', name: 'Counting Patterns', blurb: 'Count in 2s, 5s and 10s', gen: genCount },
+  { id: 'add', name: 'Adding and Taking Away', blurb: 'Jump along the number line', gen: genAdd },
+  { id: 'test', name: "The Trunchbull's Test", blurb: 'A bit of everything. Get 8 right first time to beat her!', test: true }
+];
+const lessonById = id => LESSONS.find(l => l.id === id);
+const ROUND = 10;
+
+/* ================= home ================= */
+function renderHome() {
+  $('lessons').innerHTML = LESSONS.map(l => `
+    <div class="lesson${l.test ? ' test' : ''}">
+      <button class="go" data-go="${l.id}"><span class="icon">${ICONS[l.id]}</span><span><h3>${l.name}</h3><p>${l.blurb}</p></span></button>
+      ${l.test ? '<div class="levelrow"><span>Uses each lesson\'s level</span></div>' : `
+      <div class="levelrow"><span class="dots" aria-label="Level ${S.levels[l.id]} of 3">Level ${[1, 2, 3].map(i => `<i class="${i <= S.levels[l.id] ? 'on' : ''}"></i>`).join('')}</span>
+        <span class="lvbtns"><button data-lv="${l.id}" data-d="-1" aria-label="Easier" ${S.levels[l.id] <= 1 ? 'disabled' : ''}>−</button><button data-lv="${l.id}" data-d="1" aria-label="Harder" ${S.levels[l.id] >= 3 ? 'disabled' : ''}>+</button></span></div>`}
+    </div>`).join('');
+  $('book-count').textContent = S.books === 1 ? '1 book earned' : `${S.books} books earned`;
+  const show = Math.min(S.books, 80);
+  let shelf = '';
+  for (let i = S.books - show; i < S.books; i++) shelf += `<span class="spine" style="height:${bookHeight(i)}px;background:${bookColour(i)}"></span>`;
+  if (S.books > show) shelf += `<span class="more">and ${S.books - show} more</span>`;
+  if (!S.books) shelf = '<span class="empty">Every right answer puts a new book on this shelf.</span>';
+  $('shelf').innerHTML = shelf;
+  $('speak-toggle').setAttribute('aria-pressed', String(S.speak));
+  $('speak-toggle').textContent = 'Read questions aloud: ' + (S.speak ? 'on' : 'off');
+}
+$('lessons').addEventListener('click', e => {
+  const lv = e.target.closest('[data-lv]');
+  if (lv) { const id = lv.dataset.lv; S.levels[id] = Math.max(1, Math.min(3, S.levels[id] + Number(lv.dataset.d))); save(); renderHome(); return; }
+  const go = e.target.closest('[data-go]');
+  if (go) startRound(go.dataset.go);
+});
+$('speak-toggle').addEventListener('click', () => { S.speak = !S.speak; save(); renderHome(); if (S.speak) say('I will read the questions out loud.'); else if ('speechSynthesis' in window) speechSynthesis.cancel(); });
+
+/* ================= play ================= */
+let R = null;   // round state
+let Q = null;   // current question state
+
+function show(id) { for (const s of ['home', 'play', 'end']) $(s).hidden = s !== id; window.scrollTo(0, 0); }
+
+function startRound(id) {
+  const lesson = lessonById(id);
+  R = { lesson, i: 0, first: 0, books: 0, streak: 0, results: [], lastSay: null };
+  $('play-title').textContent = lesson.name;
+  show('play');
+  renderProgress();
+  nextQuestion();
+}
+
+function generate() {
+  const l = R.lesson;
+  let q, tries = 0;
+  do {
+    if (l.test) { const src = pick(LESSONS.filter(x => !x.test)); q = src.gen(S.levels[src.id]); }
+    else q = l.gen(S.levels[l.id]);
+  } while (tries++ < 10 && JSON.stringify(q.tokens) === R.lastKey);
+  R.lastKey = JSON.stringify(q.tokens);
+  return q;
+}
+
+function nextQuestion() {
+  const q = generate();
+  const blanks = q.tokens.filter(t => t && typeof t === 'object' && 'a' in t);
+  Q = { q, blanks: blanks.map(b => ({ ...b, val: '' })), active: 0, attempts: 0, locked: false };
+  if (!q.say) q.say = q.tokens.map(t => typeof t === 'object' ? ('a' in t ? 'what number' : t.w || t.sep || '') : spokenOp(String(t))).join(' ');
+  $('lead').textContent = q.lead || '';
+  $('desk').innerHTML = q.visual || '';
+  $('desk').hidden = !q.visual;
+  $('feedback').textContent = ''; $('feedback').className = 'feedback';
+  $('explain').hidden = true;
+  const isChoice = !!q.choices;
+  $('pad').hidden = isChoice;
+  $('choices').hidden = !isChoice;
+  if (isChoice) {
+    $('choices').innerHTML = q.choices.map(c => `<button class="choice" data-c="${c.v}"><b>${c.label}</b><small>${c.sub}</small></button>`).join('');
+  }
+  setPad(true);
+  renderEq();
+  renderProgress();
+  say(q.say);
+}
+
+function renderEq() {
+  const { q } = Q;
+  let bi = 0;
+  $('eq').className = 'eq' + (q.seq ? ' seq' : '');
+  $('eq').innerHTML = q.tokens.map(t => {
+    if (typeof t === 'number') return `<span>${t}</span>`;
+    if (typeof t === 'string') return `<span class="op">${t}</span>`;
+    if (t.w) return `<span class="w">${t.w}</span>`;
+    if (t.sep) return `<span class="sep">${t.sep}</span>`;
+    if (t.choice) return `<span class="blank sym${Q.symState ? ' ' + Q.symState : ''}" aria-label="missing sign">${Q.sym || ''}</span>`;
+    const i = bi++, b = Q.blanks[i];
+    const cls = ['blank'];
+    if (b.state) cls.push(b.state);
+    else if (i === Q.active && !Q.locked) cls.push('active');
+    return `<button class="${cls.join(' ')}" data-b="${i}" aria-label="missing number${Q.blanks.length > 1 ? ' ' + (i + 1) : ''}">${b.val}</button>`;
+  }).join('');
+  const unfilled = Q.blanks.some(b => b.val === '');
+  const nextEmpty = Q.blanks.findIndex((b, i) => b.val === '' && i !== Q.active);
+  $('check').textContent = (Q.blanks[Q.active] && Q.blanks[Q.active].val !== '' && unfilled && nextEmpty >= 0) ? 'Next box →' : 'Check';
+}
+
+function renderProgress() {
+  let s = '';
+  for (let i = 0; i < ROUND; i++) {
+    const r = R.results[i];
+    if (r === 'first' || r === 'second') s += `<span class="slot book${r === 'first' ? ' star' : ''}" style="background:${bookColour(S.books - R.books + R.results.slice(0, i).filter(x => x !== 'missed').length)}"></span>`;
+    else if (r === 'missed') s += '<span class="slot missed"></span>';
+    else s += `<span class="slot${i === R.i ? ' now' : ''}"></span>`;
+  }
+  $('progress').innerHTML = s;
+}
+
+function setPad(on) {
+  document.querySelectorAll('#pad .key').forEach(k => k.disabled = !on);
+}
+
+function press(k) {
+  if (!Q || Q.locked || Q.q.choices) return;
+  const b = Q.blanks[Q.active];
+  if (k === 'check') return check();
+  if (!b) return;
+  if (k === 'del') b.val = b.val.slice(0, -1);
+  else if (k === 'clear') b.val = '';
+  else if (/^\d$/.test(k) && b.val.length < 3) b.val = (b.val === '0' ? '' : b.val) + k;
+  b.state = null;
+  renderEq();
+}
+
+function check() {
+  const empty = Q.blanks.findIndex(b => b.val === '');
+  if (empty >= 0) {
+    if (Q.blanks[Q.active].val !== '') { Q.active = empty; renderEq(); return; }
+    $('feedback').textContent = 'Type a number in the box first.'; $('feedback').className = 'feedback';
+    return;
+  }
+  let allRight = true;
+  Q.blanks.forEach(b => { const ok = Math.abs(Number(b.val) - b.a) <= b.tol; b.state = ok ? 'ok' : 'bad'; if (!ok) allRight = false; });
+  renderEq();
+  if (allRight) return correct();
+  wrong();
+}
+
+function choose(v, btn) {
+  if (!Q || Q.locked) return;
+  Q.sym = v;
+  if (v === Q.q.answer) { Q.symState = 'ok'; btn.classList.add('right'); renderEq(); return correct(); }
+  Q.symState = 'bad'; btn.disabled = true; renderEq();
+  wrong();
+}
+
+const PRAISE = ['Brilliant!', 'Super!', 'Spot on!', 'Miss Honey is beaming!', 'Another book for the library!', 'Clever clogs!', 'Your brain is fizzing!', 'Even the Trunchbull is impressed.', 'Marvellous!', 'Top marks!'];
+const RETRY = ['Not quite. Have another go.', 'Nearly! Try again.', 'Hmm, not that one. One more try.'];
+
+function correct() {
+  Q.locked = true; setPad(false);
+  const first = Q.attempts === 0;
+  const blank = Q.blanks[0];
+  R.results[R.i] = first ? 'first' : 'second';
+  if (first) { R.first++; R.streak++; } else R.streak = 0;
+  R.books++; S.books++; save();
+  let msg = pick(PRAISE);
+  if (blank && blank.tol && Number(blank.val) !== blank.a) msg = `Good guess! It was ${blank.a}.`;
+  $('feedback').textContent = msg; $('feedback').className = 'feedback good';
+  say(msg);
+  renderProgress();
+  const magic = first && R.streak > 0 && R.streak % 3 === 0;
+  setTimeout(() => magic ? chalkMagic(advance) : advance(), 1300);
+}
+
+function wrong() {
+  Q.attempts++; R.streak = 0;
+  if (Q.attempts === 1) {
+    const msg = pick(RETRY);
+    $('feedback').textContent = msg; $('feedback').className = 'feedback bad';
+    say(msg);
+    if (!Q.q.choices) {
+      Q.locked = true;
+      setTimeout(() => {
+        Q.blanks.forEach(b => { if (b.state === 'bad') b.val = ''; if (b.state === 'ok') b.state = 'ok'; else b.state = null; });
+        Q.active = Math.max(0, Q.blanks.findIndex(b => b.val === ''));
+        Q.locked = false; renderEq();
+      }, 800);
+    } else { setTimeout(() => { Q.symState = null; Q.sym = ''; renderEq(); }, 800); }
+    return;
+  }
+  // second miss: show the answer and why
+  Q.locked = true; setPad(false);
+  R.results[R.i] = 'missed';
+  Q.blanks.forEach(b => { b.val = String(b.a); b.state = 'shown'; });
+  if (Q.q.choices) { Q.sym = Q.q.answer; Q.symState = 'shown'; document.querySelectorAll('#choices .choice').forEach(c => { c.disabled = true; if (c.dataset.c === Q.q.answer) c.classList.add('right'); }); }
+  renderEq(); renderProgress();
+  $('feedback').textContent = ''; $('feedback').className = 'feedback';
+  $('explain').innerHTML = `<h3>Let's look at it together</h3>${Q.q.explain()}<button class="btn" id="next">Next question →</button>`;
+  $('explain').hidden = false;
+  $('pad').hidden = true; $('choices').hidden = true;
+  say("Let's look at it together.");
+  $('next').addEventListener('click', advance);
+  $('explain').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function advance() {
+  R.i++;
+  if (R.i >= ROUND) return endRound();
+  nextQuestion();
+}
+
+const MAGIC = ['Three in a row!', 'Brain power!', 'Look, no hands!', 'Sparkling!'];
+function chalkMagic(done) {
+  const text = pick(MAGIC);
+  const letters = [...text].map((c, i) => `<span style="animation-delay:${.35 + i * .06}s">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+  $('magic').innerHTML = `<div class="stick"></div><p>${letters}<small style="animation-delay:${.5 + text.length * .06}s">The chalk is writing all by itself!</small></p>`;
+  $('magic').classList.add('on');
+  say(text + ' The chalk is writing all by itself!');
+  setTimeout(() => { $('magic').classList.remove('on'); setTimeout(() => { $('magic').innerHTML = ''; done(); }, 250); }, 2600);
+}
+
+const CAKE = `<svg viewBox="0 0 150 110"><ellipse cx="75" cy="98" rx="68" ry="9" fill="#f6f3ea" opacity=".9"/><path d="M20 55h110v40H20z" fill="#5a3320"/><path d="M20 55q55-26 110 0" fill="#7a4a2c"/><path d="M20 60q9 9 18 0t18 0t18 0t18 0t18 0t20 0" fill="none" stroke="#3a1f12" stroke-width="3"/><path d="M20 75h110" stroke="#3a1f12" stroke-width="3"/><path d="M75 26v18" stroke="#f6f3ea" stroke-width="4"/><path d="M75 12q6 7 0 12q-6-5 0-12z" fill="#e9b53c"/></svg>`;
+
+function endRound() {
+  const l = R.lesson, f = R.first;
+  let title, extra = '';
+  if (l.test) {
+    title = f >= 8 ? 'You beat the Trunchbull!' : 'The Trunchbull wants a rematch';
+    extra = f >= 8
+      ? `<p>She has stomped off in a huff, and the whole class gets chocolate cake.</p>${CAKE}`
+      : `<p>You needed 8 right first time. So close. Have another go and show her what you can do.</p>`;
+  } else {
+    title = f >= 8 ? 'Wonderful work!' : f >= 5 ? 'Well done!' : 'Good effort!';
+    if (f >= 9 && S.levels[l.id] < 3) { S.levels[l.id]++; save(); extra = `<p class="lvup">Level up! ${l.name} is now level ${S.levels[l.id]}.</p>`; }
+  }
+  $('done').innerHTML = `
+    <h2>${title}</h2>
+    <div class="big">${f}<small> / ${ROUND}</small></div>
+    <p>right first time, and <b>${plural(R.books, 'book', 'books')}</b> added to your library.</p>
+    ${extra}
+    <div class="donebtns"><button class="btn" id="again">Play again</button><button class="btn plain" id="home-btn">Pick a lesson</button></div>`;
+  show('end');
+  say(`${title} You got ${f} right first time.`);
+  $('again').addEventListener('click', () => startRound(l.id));
+  $('home-btn').addEventListener('click', goHome);
+}
+
+function goHome() { if ('speechSynthesis' in window) speechSynthesis.cancel(); renderHome(); show('home'); }
+
+$('pad').addEventListener('click', e => { const k = e.target.closest('[data-k]'); if (k) press(k.dataset.k); });
+$('choices').addEventListener('click', e => { const c = e.target.closest('[data-c]'); if (c && !c.disabled) choose(c.dataset.c, c); });
+$('eq').addEventListener('click', e => { const b = e.target.closest('[data-b]'); if (b && Q && !Q.locked) { Q.active = Number(b.dataset.b); renderEq(); } });
+$('back').addEventListener('click', goHome);
+$('say-again').addEventListener('click', () => Q && say(Q.q.say, true));
+document.addEventListener('keydown', e => {
+  if ($('play').hidden || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (/^\d$/.test(e.key)) press(e.key);
+  else if (e.key === 'Backspace') press('del');
+  else if (e.key === 'Enter') { const n = $('next'); if (!$('explain').hidden && n) n.click(); else press('check'); e.preventDefault(); }
+  else if (Q && Q.q.choices && ['<', '>', '='].includes(e.key)) { const c = document.querySelector(`#choices [data-c="${e.key}"]`); if (c && !c.disabled) choose(e.key, c); }
+});
+
+renderHome();
+</script>
+</body>
+</html>
