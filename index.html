@@ -218,6 +218,30 @@ button.spine:focus-visible{outline:3px solid var(--honey-dark);outline-offset:2p
 .factchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px}
 .factchip{border:none;border-left:6px solid;border-radius:6px;background:rgba(255,255,255,.1);color:var(--chalk);padding:5px 10px;font-weight:700;font-variant-numeric:tabular-nums}
 
+/* ---------- compare and order ---------- */
+.choices.two{grid-template-columns:repeat(2,1fr)}
+.bookchoice,.bookbtn{--bk:#3b78c4;border:none;border-radius:6px 6px 3px 3px;background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 18%,transparent 82%,rgba(0,0,0,.22)),var(--bk);box-shadow:0 5px 0 var(--wood-dark);display:flex;align-items:flex-start;justify-content:center;padding-top:18px;position:relative}
+.bookchoice::before,.bookbtn::before,.bookchoice::after,.bookbtn::after{content:"";position:absolute;left:0;right:0;height:5px;background:rgba(255,255,255,.35)}
+.bookchoice::before,.bookbtn::before{top:8px}
+.bookchoice::after,.bookbtn::after{bottom:14px}
+.plate{background:var(--paper-2);color:var(--ink);border-radius:6px;padding:4px 8px;font-weight:700;font-size:clamp(1.6rem,6vw,2.2rem);line-height:1.1;font-variant-numeric:tabular-nums;box-shadow:0 1px 0 rgba(0,0,0,.2)}
+.bookchoice{min-height:170px;opacity:1}
+.bookchoice:active,.bookbtn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--wood-dark)}
+.bookchoice:disabled{opacity:.3}
+.bookchoice.right{outline:4px solid var(--good);outline-offset:3px;border:none;background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 18%,transparent 82%,rgba(0,0,0,.22)),var(--bk)}
+.trolley{display:flex;gap:12px;justify-content:center;align-items:flex-end;flex-wrap:wrap;padding:6px 4px 10px;border-bottom:10px solid var(--wood);width:100%}
+.bookbtn{width:clamp(62px,18vw,84px);height:clamp(120px,18vh,150px);cursor:pointer;transition:opacity .2s,transform .2s}
+.bookbtn:nth-child(2n){height:clamp(110px,16vh,138px)}
+.bookbtn:nth-child(3n){height:clamp(128px,19vh,158px)}
+.bookbtn.placed{opacity:.18;transform:translateY(6px)}
+.desk:has(.trolley){flex-direction:column;align-items:center;gap:8px}
+.ordbar{display:grid;grid-template-columns:1fr 1.6fr;gap:10px}
+.ordbar .key{font-size:1.15rem;white-space:nowrap}
+.eq.ord{flex-wrap:nowrap;font-size:clamp(1.3rem,8cqi,3.4rem);gap:.25em}
+.eq.ord .blank{min-width:1.45em;padding:0 .1em}
+.choices.two .bookchoice{justify-self:center;width:min(150px,100%)}
+.bookchoice{flex-direction:column;align-items:center;justify-content:flex-start}
+
 /* ---------- round end ---------- */
 .done{padding:26px 18px 30px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
 .done h2{margin:0;font-family:var(--chalkfont);font-weight:400;font-size:clamp(2rem,7vw,3rem);line-height:1.1}
@@ -290,6 +314,7 @@ button.spine:focus-visible{outline:3px solid var(--honey-dark);outline-offset:2p
         <button class="key check" data-k="check" id="check">Check</button>
       </div>
       <div class="choices" id="choices" hidden></div>
+      <div class="ordbar" id="ordbar" hidden><button class="key del" id="ord-undo">↩ Take back</button><button class="key check" id="ord-check">Check</button></div>
       <button class="btn" id="go-next" hidden>Next question →</button>
       <div class="explain" id="explain" hidden></div>
     </div>
@@ -331,7 +356,7 @@ const bookHeight = i => 40 + ((i * 13) % 5) * 5;
 
 /* ================= storage ================= */
 const KEY = 'matildalgebra.v1';
-let S = { books: 0, facts: [], levels: { pv: 1, nl: 1, count: 1, add: 1 }, sound: true, voice: null, autoNext: true };
+let S = { books: 0, facts: [], levels: { pv: 1, order: 1, nl: 1, count: 1, add: 1 }, sound: true, voice: null, autoNext: true };
 try {
   const s = JSON.parse(localStorage.getItem(KEY));
   if (s) { S = { ...S, ...s, levels: { ...S.levels, ...(s.levels || {}) } }; if ('speak' in s && !('sound' in s)) S.sound = s.speak; delete S.speak; }
@@ -476,7 +501,7 @@ function genPV(level) {
   let o = rnd(1, 9);
   if (level > 1 && Math.random() < .12) o = 0;
   const n = t * 10 + o;
-  const forms = level === 1 ? ['A', 'A', 'B', 'C'] : level === 2 ? ['A', 'B', 'C', 'D', 'E', 'CMP'] : ['A', 'B', 'D', 'F', 'F', 'G', 'CMP', 'CMP'];
+  const forms = level === 1 ? ['A', 'A', 'B', 'C'] : level === 2 ? ['A', 'B', 'C', 'D', 'E'] : ['A', 'B', 'D', 'F', 'F', 'G', 'C', 'E'];
   let f = pick(forms);
   if (f === 'F' && t < 2) f = 'A';
   if ((f === 'A' || f === 'B') && o === 0) f = 'D';
@@ -515,7 +540,7 @@ function genCompare(level) {
   const ans = a < b ? '<' : a > b ? '>' : '=';
   const word = { '<': 'is less than', '>': 'is more than', '=': 'is equal to' };
   const ta = Math.floor(a / 10), tb = Math.floor(b / 10);
-  const key = `<div class="signkey"><span><b>&lt;</b> is less than</span><span><b>&gt;</b> is more than</span><span><b>=</b> is equal to</span></div><p class="tip">The open mouth always faces the bigger number.</p>`;
+  const key = SIGN_KEY;
   const pics = level < 3 ? `<div class="pair">${blocksSVG(a, { small: true, title: a })}${blocksSVG(b, { small: true, title: b })}</div>` : '';
   return {
     lead: 'Which sign goes in the box?',
@@ -639,8 +664,92 @@ function genAdd(level) {
   }
 }
 
+/* ---------- Compare and Order: Mrs Phelps's library ---------- */
+const SIGN_KEY = `<div class="signkey"><span><b>&lt;</b> is less than</span><span><b>&gt;</b> is more than</span><span><b>=</b> is equal to</span></div><p class="tip">The open mouth always faces the bigger number.</p>`;
+const signWord = { '<': 'is less than', '>': 'is more than', '=': 'is equal to' };
+const SIGN_CHOICES = [{ v: '<', label: '<', sub: 'less than' }, { v: '>', label: '>', sub: 'more than' }, { v: '=', label: '=', sub: 'equal to' }];
+const sortedAsc = a => a.slice().sort((x, y) => x - y);
+
+// Distinct 2-digit numbers. sameTens: make at least two share a tens digit (the tricky case).
+function bookNumbers(n, sameTens) {
+  let nums;
+  do {
+    const set = new Set();
+    if (sameTens) { const t = rnd(1, 9) * 10; set.add(t + rnd(0, 9)); while (set.size < 2) set.add(t + rnd(0, 9)); }
+    while (set.size < n) set.add(rnd(10, 99));
+    nums = shuffle([...set]);
+  } while (n > 2 && (nums.join() === sortedAsc(nums).join() || nums.join() === sortedAsc(nums).reverse().join()));
+  return nums;
+}
+
+function orderExplain(nums, desc) {
+  const s = sortedAsc(nums), lo = Math.floor(s[0] / 10) * 10, hi = Math.ceil((s[s.length - 1] + 1) / 10) * 10;
+  const line = lineSVG({ min: lo, max: hi, ticks: [...range(lo, hi, 10), ...s], labels: s, marks: s, hideEndArrows: true });
+  const tensMatch = s.some((v, i) => i && Math.floor(v / 10) === Math.floor(s[i - 1] / 10));
+  const order = desc ? s.slice().reverse() : s;
+  return `<div class="pic">${line}</div><p>On the number line, smaller numbers are further left. ${desc ? 'Biggest first' : 'Smallest first'}: <b>${order.join(desc ? ' > ' : ' < ')}</b>.</p><p>Look at the tens first.${tensMatch ? ' When the tens are the same, look at the ones.' : ''}</p>`;
+}
+
+function genOrder(level) {
+  const kind = pick(level === 1 ? ['pick'] : level === 2 ? ['cmp', 'cmp', 'order3', 'order3', 'order3'] : ['order4', 'order4', 'order4', 'cmp', 'sum', 'sum']);
+  if (kind === 'cmp') return genCompare(level);
+
+  if (kind === 'pick') {
+    const [a, b] = bookNumbers(2, Math.random() < .35);
+    const bigger = Math.random() < .5, ans = bigger ? Math.max(a, b) : Math.min(a, b), other = ans === a ? b : a;
+    const word = bigger ? 'bigger' : 'smaller';
+    return {
+      lead: `Tap the book with the ${word} number`,
+      tokens: [{ w: `The ${word} number is` }, { choice: true }],
+      choices: [a, b].map(n => ({ v: String(n), label: String(n), book: true })),
+      answer: String(ans),
+      say: `Which book has the ${word} number? ${a}, or ${b}?`,
+      fact: `${Math.max(a, b)} > ${Math.min(a, b)}`,
+      after: `${ans} is ${word} than ${other}.`,
+      visual: '',
+      explain: () => {
+        const big = Math.max(a, b), small = Math.min(a, b), tb = Math.floor(big / 10), ts = Math.floor(small / 10);
+        const why = tb !== ts ? `Look at the tens first. ${big} has ${plural(tb, 'ten', 'tens')} and ${small} has ${plural(ts, 'ten', 'tens')}.` : `They both have ${plural(tb, 'ten', 'tens')}, so look at the ones: ${big % 10} is more than ${small % 10}.`;
+        return `<div class="pair">${blocksSVG(a, { small: true, title: a })}${blocksSVG(b, { small: true, title: b })}</div><p><b>${ans}</b> is the ${word} number. ${why}</p>`;
+      }
+    };
+  }
+
+  if (kind === 'sum') {
+    const a = rnd(1, 8) * 10, b = rnd(1, 9), s = a + b;
+    const r = Math.random(), c = r < .2 ? s : Math.min(99, Math.max(11, s + (r < .6 ? -rnd(1, 4) : rnd(1, 4))));
+    const sumFirst = Math.random() < .6;
+    const ans = sumFirst ? (s < c ? '<' : s > c ? '>' : '=') : (c < s ? '<' : c > s ? '>' : '=');
+    const tokens = sumFirst ? [a, '+', b, { choice: true }, c] : [c, { choice: true }, a, '+', b];
+    return {
+      lead: 'Work out the sum, then pick the sign',
+      tokens, choices: SIGN_CHOICES, answer: ans,
+      say: sumFirst ? `Is ${a} plus ${b} less than, more than, or equal to ${c}?` : `Is ${c} less than, more than, or equal to ${a} plus ${b}?`,
+      after: sumFirst ? `${a} plus ${b} is ${s}, so it ${signWord[ans]} ${c}.` : `${a} plus ${b} is ${s}, so ${c} ${signWord[ans]} it.`,
+      visual: `<div class="cmp">${SIGN_KEY}</div>`,
+      explain: () => `<p class="bigfact">${esc(tokens.map(t => typeof t === 'object' ? ans : t).join(' '))}</p><p>First work out <b>${a} + ${b} = ${s}</b>. Then compare ${s} and ${c}.</p>${SIGN_KEY}`
+    };
+  }
+
+  const n = kind === 'order3' ? 3 : 4;
+  const desc = level === 3 && Math.random() < .5;
+  const nums = bookNumbers(n, level === 3 || Math.random() < .3);
+  const ordered = desc ? sortedAsc(nums).reverse() : sortedAsc(nums);
+  const sign = desc ? '>' : '<';
+  const tokens = [];
+  ordered.forEach((v, i) => { if (i) tokens.push(sign); tokens.push(B(v)); });
+  return {
+    lead: desc ? 'Put the books back: biggest first' : 'Put the books back: smallest first',
+    tokens, order: nums, seq: true,
+    say: `Mrs Phelps needs the books back in order, ${desc ? 'biggest' : 'smallest'} first. The books are ${nums.join(', ')}.`,
+    visual: '',
+    explain: () => orderExplain(nums, desc)
+  };
+}
+
 /* ================= lessons ================= */
 const ICONS = {
+  order: `<svg viewBox="0 0 48 48"><rect x="6" y="20" width="10" height="22" rx="1.5" fill="#3b78c4"/><rect x="19" y="13" width="10" height="29" rx="1.5" fill="#e0902a"/><rect x="32" y="6" width="10" height="36" rx="1.5" fill="#c8553d"/><path d="M3 43h42" stroke="#f6f3ea" stroke-width="2.5" stroke-linecap="round"/></svg>`,
   pv: `<svg viewBox="0 0 48 48"><g fill="#3b78c4" stroke="#f6f3ea" stroke-width="1.2"><rect x="6" y="6" width="7" height="36" rx="1"/><rect x="16" y="6" width="7" height="36" rx="1"/></g><g fill="#e0902a" stroke="#f6f3ea" stroke-width="1.2"><rect x="28" y="35" width="7" height="7" rx="1"/><rect x="28" y="26" width="7" height="7" rx="1"/><rect x="37" y="35" width="7" height="7" rx="1"/></g></svg>`,
   nl: `<svg viewBox="0 0 48 48" stroke="#f6f3ea" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M3 32h42M8 27v10M18 29v6M28 29v6M38 27v10"/><path d="M28 24l-5-7h3v-9h4v9h3z" fill="#e9b53c" stroke="#e9b53c" stroke-width="1"/></svg>`,
   count: `<svg viewBox="0 0 48 48" fill="none" stroke-linecap="round"><path d="M3 38h42" stroke="#f6f3ea" stroke-width="2.5"/><path d="M6 36q7-18 14 0M20 36q7-18 14 0M34 36q5-13 10 -1" stroke="#e9b53c" stroke-width="2.5"/></svg>`,
@@ -649,6 +758,7 @@ const ICONS = {
 };
 const LESSONS = [
   { id: 'pv', name: 'Tens and Ones', blurb: '54 = 50 + ☐', gen: genPV },
+  { id: 'order', name: 'Compare and Order', blurb: "Help Mrs Phelps put the library books back in order", gen: genOrder },
   { id: 'nl', name: 'Number Lines', blurb: 'Where is the arrow pointing?', gen: genNL },
   { id: 'count', name: 'Counting Patterns', blurb: 'Count in 2s, 5s and 10s', gen: genCount },
   { id: 'add', name: 'Adding and Taking Away', blurb: 'Jump along the number line', gen: genAdd },
@@ -795,10 +905,15 @@ function nextQuestion() {
   $('feedback').textContent = ''; $('feedback').className = 'feedback';
   $('explain').hidden = true;
   $('go-next').hidden = true;
-  const isChoice = !!q.choices;
-  $('pad').hidden = isChoice;
+  const isChoice = !!q.choices, isOrder = !!q.order;
+  $('pad').hidden = isChoice || isOrder;
   $('choices').hidden = !isChoice;
-  if (isChoice) $('choices').innerHTML = q.choices.map(c => `<button class="choice" data-c="${c.v}"><b>${esc(c.label)}</b><small>${c.sub}</small></button>`).join('');
+  $('ordbar').hidden = !isOrder;
+  $('choices').classList.toggle('two', isChoice && q.choices.length === 2);
+  if (isChoice) $('choices').innerHTML = q.choices.map((c, i) => c.book
+    ? `<button class="choice bookchoice" data-c="${c.v}" style="--bk:${bookColour(Number(c.v) + i)}" aria-label="Book ${c.v}"><span class="plate">${esc(c.label)}</span></button>`
+    : `<button class="choice" data-c="${c.v}"><b>${esc(c.label)}</b><small>${c.sub}</small></button>`).join('');
+  if (isOrder) { $('desk').hidden = false; Q.colours = shuffle(BOOK_COLOURS).slice(0, q.order.length); }
   setPad(true);
   renderEq();
   renderProgress();
@@ -808,10 +923,10 @@ function nextQuestion() {
 function renderEq() {
   const { q } = Q;
   let bi = 0;
-  $('eq').className = 'eq' + (q.seq ? ' seq' : '');
+  $('eq').className = 'eq' + (q.order ? ' ord' : q.seq ? ' seq' : '');
   $('eq').innerHTML = q.tokens.map(t => {
     if (typeof t === 'number') return `<span>${t}</span>`;
-    if (typeof t === 'string') return `<span class="op">${t}</span>`;
+    if (typeof t === 'string') return `<span class="op">${esc(t)}</span>`;
     if (t.w) return `<span class="w">${t.w}</span>`;
     if (t.sep) return `<span class="sep">${t.sep}</span>`;
     if (t.choice) return `<span class="blank sym${Q.symState ? ' ' + Q.symState : ''}" aria-label="missing sign">${esc(Q.sym || '')}</span>`;
@@ -821,9 +936,37 @@ function renderEq() {
     else if (i === Q.active && !Q.locked) cls.push('active');
     return `<button class="${cls.join(' ')}" data-b="${i}" aria-label="missing number${Q.blanks.length > 1 ? ' ' + (i + 1) : ''}">${b.val}</button>`;
   }).join('');
+  if (q.order) { renderTrolley(); return; }
   const unfilled = Q.blanks.some(b => b.val === '');
   const nextEmpty = Q.blanks.findIndex((b, i) => b.val === '' && i !== Q.active);
   $('check').textContent = (Q.blanks[Q.active] && Q.blanks[Q.active].val !== '' && unfilled && nextEmpty >= 0) ? 'Next box →' : 'Check';
+}
+
+// The book trolley: muddled books to tap onto the shelf (the boxes on the board).
+function renderTrolley() {
+  const used = new Set(Q.blanks.map(b => b.val).filter(v => v !== ''));
+  const done = Q.locked;
+  $('desk').innerHTML = `<div class="trolley">${Q.q.order.map((n, i) => {
+    const placed = used.has(String(n));
+    return `<button class="bookbtn${placed ? ' placed' : ''}" data-book-n="${n}" style="--bk:${Q.colours[i]}" ${placed || done ? 'disabled' : ''} aria-label="Book ${n}"><span class="plate">${n}</span></button>`;
+  }).join('')}</div><p class="tip">${Q.blanks.every(b => b.val !== '') ? 'All on the shelf. Tap Check!' : 'Tap the books in order. Tap a box on the board to take a book back.'}</p>`;
+}
+function placeBook(n) {
+  if (!Q || Q.locked) return;
+  const i = Q.blanks.findIndex(b => b.val === '');
+  if (i < 0) return;
+  Q.blanks[i].val = String(n); Q.blanks[i].state = null;
+  renderEq();
+}
+function takeBack(i) {
+  if (!Q || Q.locked) return;
+  if (i === undefined) { for (let k = Q.blanks.length - 1; k >= 0; k--) if (Q.blanks[k].val !== '') { i = k; break; } }
+  if (i === undefined || Q.blanks[i].val === '') return;
+  Q.blanks[i].val = ''; Q.blanks[i].state = null;
+  // close the gap so books always fill from the left
+  const vals = Q.blanks.map(b => b.val).filter(v => v !== '');
+  Q.blanks.forEach((b, k) => { b.val = vals[k] || ''; if (!b.val) b.state = null; });
+  renderEq();
 }
 
 function renderProgress() {
@@ -841,6 +984,7 @@ function setPad(on) { document.querySelectorAll('#pad .key').forEach(k => k.disa
 
 function press(k) {
   if (!Q || Q.locked || Q.q.choices) return;
+  if (Q.q.order) { if (k === 'check') check(); return; }
   const b = Q.blanks[Q.active];
   if (k === 'check') return check();
   if (!b) return;
@@ -855,7 +999,7 @@ function check() {
   const empty = Q.blanks.findIndex(b => b.val === '');
   if (empty >= 0) {
     if (Q.blanks[Q.active].val !== '') { Q.active = empty; renderEq(); return; }
-    $('feedback').textContent = 'Type a number in the box first.'; $('feedback').className = 'feedback';
+    $('feedback').textContent = Q.q.order ? 'Put all the books on the shelf first.' : 'Type a number in the box first.'; $('feedback').className = 'feedback';
     return;
   }
   let allRight = true;
@@ -906,7 +1050,7 @@ async function correct() {
   if (my !== qid) return;
   if (first && R.streak > 0 && R.streak % 3 === 0) { await chalkMagic(); if (my !== qid) return; }
   if (S.autoNext) advance();
-  else { $('pad').hidden = true; $('choices').hidden = true; $('go-next').hidden = false; $('go-next').focus(); }
+  else { $('pad').hidden = true; $('choices').hidden = true; $('ordbar').hidden = true; $('go-next').hidden = false; $('go-next').focus(); }
 }
 
 function wrong() {
@@ -935,7 +1079,7 @@ function wrong() {
   $('feedback').textContent = ''; $('feedback').className = 'feedback';
   $('explain').innerHTML = `<h3>Let's look at it together</h3>${Q.q.explain()}<button class="btn" id="next">Next question →</button>`;
   $('explain').hidden = false;
-  $('pad').hidden = true; $('choices').hidden = true;
+  $('pad').hidden = true; $('choices').hidden = true; $('ordbar').hidden = true;
   say("Let's look at it together. " + (Q.q.after || spoken(factOf(Q.q)) + '.'));
   $('next').addEventListener('click', advance);
   $('explain').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -994,7 +1138,10 @@ function goHome() { qid++; hush(); renderHome(); show('home'); }
 
 $('pad').addEventListener('click', e => { const k = e.target.closest('[data-k]'); if (k) press(k.dataset.k); });
 $('choices').addEventListener('click', e => { const c = e.target.closest('[data-c]'); if (c && !c.disabled) choose(c.dataset.c, c); });
-$('eq').addEventListener('click', e => { const b = e.target.closest('[data-b]'); if (b && Q && !Q.locked) { Q.active = Number(b.dataset.b); renderEq(); } });
+$('eq').addEventListener('click', e => { const b = e.target.closest('[data-b]'); if (!b || !Q || Q.locked) return; if (Q.q.order) takeBack(Number(b.dataset.b)); else { Q.active = Number(b.dataset.b); renderEq(); } });
+$('desk').addEventListener('click', e => { const b = e.target.closest('[data-book-n]'); if (b && !b.disabled) placeBook(b.dataset.bookN); });
+$('ord-undo').addEventListener('click', () => takeBack());
+$('ord-check').addEventListener('click', () => check());
 $('back').addEventListener('click', goHome);
 $('go-next').addEventListener('click', advance);
 $('say-again').addEventListener('click', () => Q && say(Q.q.say, true));

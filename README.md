@@ -6,7 +6,8 @@ Every right answer puts a book on the library shelf, with the maths fact from th
 
 ## Lessons
 
-- **Tens and Ones**: fill the empty box in `54 = 50 + ☐`, with base-ten blocks to help. Harder levels add tens-and-ones boxes, comparing with `<`, `>` and `=`, and splitting a number a different way (`54 = 40 + 14`).
+- **Tens and Ones**: fill the empty box in `54 = 50 + ☐`, with base-ten blocks to help. Harder levels add tens-and-ones boxes and splitting a number a different way (`54 = 40 + 14`).
+- **Compare and Order**: help Mrs Phelps put the library books back. Level 1 is tapping the book with the bigger or smaller number (words only, no symbols). Level 2 brings in `<`, `>` and `=` with a sign key, and tapping 3 books onto the shelf smallest first. Level 3 has 4 books (sometimes biggest first, often sharing a tens digit) and comparing sums such as `40 + 3 ○ 45`.
 - **Number Lines**: where is the arrow pointing? The lines go 0–20, 0–100 in tens, then 10-wide segments, fives and twos, and finally estimating on a mostly blank line.
 - **Counting Patterns**: count in 2s, 5s and 10s, forwards and backwards, with 3s and two missing boxes at level 3.
 - **Adding and Taking Away**: from facts within 20 and number bonds to 10 and 100, up to 2-digit ± 1-digit and 2-digit numbers that cross a ten. Explanations use the empty number line, jumping to the next ten first.
