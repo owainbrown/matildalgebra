@@ -2,7 +2,7 @@
 
 A maths game for Year 2, set in Miss Honey's classroom. It follows the White Rose Maths autumn term: place value within 100, and addition and subtraction within 100.
 
-Every right answer puts a book on the library shelf. Get three in a row first time and the chalk starts writing by itself. The Trunchbull's Test mixes all the lessons: get 8 out of 10 right first time to beat her.
+Every right answer puts a book on the library shelf, with the maths fact from that question written inside (tap a book to read it, or have it read aloud). Get three in a row first time and the chalk starts writing by itself. The Trunchbull's Test mixes all the lessons: get 8 out of 10 right first time to beat her.
 
 ## Lessons
 
@@ -15,7 +15,9 @@ Each lesson has three levels. Scoring 9 or 10 right first time moves it up a lev
 
 The first wrong answer gives another go. A second wrong answer shows the answer with a picture explaining it.
 
-Questions are read aloud with the browser's speech (en-GB voice where there is one). This can be switched off on the home screen.
+There are no timers anywhere. After a right answer the game waits for any speaking to finish before moving on, or, if you prefer, waits for a Next button.
+
+Questions are read aloud with the browser's speech. Novelty and robotic voices (the iPad ones like Grandma, Rocko and Bubbles) are filtered out and the best British voice is chosen; a grown-up can pick a different voice on the home screen. Sound can be switched off on the home screen or from the button during a lesson.
 
 ## Running it
 

@@ -94,7 +94,7 @@ button:focus-visible{outline:3px solid var(--honey-dark);outline-offset:3px}
 .playtop{display:flex;align-items:center;gap:10px}
 .back{flex:0 0 auto;border:1px solid var(--line);background:var(--paper-2);border-radius:10px;padding:8px 12px;font-weight:700;font-size:.95rem}
 .playtop h2{margin:0;font-size:clamp(.95rem,4vw,1.15rem);line-height:1.2;flex:1 1 0;min-width:0}
-.speak{flex:0 0 auto;border:2px solid var(--honey-dark);background:var(--honey-soft);border-radius:12px;width:48px;height:44px;display:grid;place-items:center}
+.speak{flex:0 0 auto;border:2px solid var(--honey-dark);background:var(--honey-soft);border-radius:12px;width:58px;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
 .speak svg{width:24px;height:24px}
 .progress{display:flex;gap:5px;align-items:flex-end;height:44px;padding:0 6px;border-bottom:8px solid var(--wood);border-radius:3px;width:100%}
 .progress .slot{flex:1 1 0;max-width:30px;height:18px;border:2px dashed var(--line);border-bottom:none;border-radius:4px 4px 0 0;transition:height .3s}
@@ -141,6 +141,24 @@ button:focus-visible{outline:3px solid var(--honey-dark);outline-offset:3px}
 
 .desk{background:var(--paper-2);border:2px solid var(--line);border-radius:16px;padding:10px;display:flex;justify-content:center}
 .desk svg{max-width:100%;height:auto;max-height:28vh;display:block}
+.blocks{display:flex;flex-direction:column;align-items:center;gap:6px}
+.brow{display:flex;gap:22px;align-items:flex-end;justify-content:center}
+.bgrp{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.blocks .brow .bgrp svg{height:clamp(96px,20vh,140px);width:auto;max-width:none;max-height:none;display:block}
+.blocks.small .brow .bgrp svg{height:clamp(46px,7.5vh,96px)}
+.blocks.small .brow{gap:12px}
+.blocks.small .btitle{font-size:1.1rem}
+.bgrp figcaption{font-weight:700;font-size:1rem;white-space:nowrap;line-height:1}
+.tcap{color:var(--tens)} .ocap{color:#a86410}
+.btitle{font-weight:700;font-size:1.3rem}
+.cmp{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.signkey{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 10px;font-size:clamp(.9rem,3.6vw,1.05rem)}
+.signkey span{background:var(--paper-3);border-radius:10px;padding:4px 12px;white-space:nowrap}
+.signkey b{font-size:1.4rem;margin-right:4px}
+.tip{margin:0;color:var(--ink-dim);font-size:.95rem;text-align:center}
+.pair{display:flex;gap:12px 16px;justify-content:center;flex-wrap:wrap}
+.pair .blocks{padding:6px 10px;border-radius:12px;background:var(--paper-3)}
+.bigfact{font-size:2rem;font-weight:700;text-align:center;margin:0}
 .feedback{margin:0;min-height:1.5em;text-align:center;font-weight:700;font-size:1.15rem}
 .feedback.good{color:var(--good)}
 .feedback.bad{color:var(--miss)}
@@ -168,6 +186,38 @@ button:focus-visible{outline:3px solid var(--honey-dark);outline-offset:3px}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--honey-dark)}
 .btn.plain{background:var(--paper-2);border-color:var(--line);box-shadow:0 4px 0 var(--line)}
 
+/* ---------- settings, timers, book viewer ---------- */
+.pickrow{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 14px}
+.notimer-pill,.notimer{display:inline-flex;align-items:center;gap:6px;color:var(--good);font-weight:700;font-size:.95rem}
+.notimer{font-size:.8rem}
+.ptitle{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:2px}
+.speak span{font-size:.65rem;font-weight:700;line-height:1;color:var(--wood-dark)}
+.speak[aria-pressed="false"]{background:var(--paper-3);border-color:var(--line)}
+.grownups{background:var(--paper-2);border:2px dashed var(--line);border-radius:16px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;font-size:.95rem;color:var(--ink-dim)}
+.grownups h2{margin:0;font-size:1.05rem;color:var(--ink)}
+.grownups p{margin:0}
+.setrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.setlabel{min-width:10.5em;font-weight:700;color:var(--ink)}
+.setrow select{font:inherit;font-size:.95rem;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:#fff;max-width:100%;min-width:0;flex:1 1 180px}
+button.spine{border:none;padding:0;cursor:pointer;width:16px}
+button.spine:hover{transform:translateY(-4px)}
+button.spine:focus-visible{outline:3px solid var(--honey-dark);outline-offset:2px}
+.shelfhint{margin:0;font-size:.9rem;color:var(--ink-dim)}
+#go-next{width:100%;font-size:1.35rem;padding:18px}
+.bookview{position:fixed;inset:0;background:rgba(43,35,32,.55);display:grid;place-items:center;padding:16px;z-index:10}
+.bookcard{display:flex;max-width:520px;width:100%;border-radius:10px 16px 16px 10px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.35);animation:open .3s ease}
+@keyframes open{from{transform:scale(.9) rotate(-2deg);opacity:0}}
+.bookspine{flex:0 0 26px;box-shadow:inset -6px 0 10px rgba(0,0,0,.25)}
+.bookpage{flex:1;background:var(--paper-2);padding:22px 20px;display:flex;flex-direction:column;gap:12px;background-image:repeating-linear-gradient(transparent 0 31px,rgba(59,120,196,.12) 31px 32px)}
+.bv-title{margin:0;font-family:var(--chalkfont);font-size:1.4rem;color:var(--wood-dark)}
+.bv-fact{margin:0;font-weight:700;font-size:clamp(1.8rem,8vw,2.6rem);line-height:1.2;text-align:center;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.bv-extra{margin:0;text-align:center;color:var(--ink-dim);font-size:1.15rem}
+.bv-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.newbooks{display:flex;flex-direction:column;gap:6px;align-items:center;width:100%}
+.newbooks h3{margin:4px 0 0;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk-dim)}
+.factchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px}
+.factchip{border:none;border-left:6px solid;border-radius:6px;background:rgba(255,255,255,.1);color:var(--chalk);padding:5px 10px;font-weight:700;font-variant-numeric:tabular-nums}
+
 /* ---------- round end ---------- */
 .done{padding:26px 18px 30px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
 .done h2{margin:0;font-family:var(--chalkfont);font-weight:400;font-size:clamp(2rem,7vw,3rem);line-height:1.1}
@@ -190,28 +240,34 @@ button:focus-visible{outline:3px solid var(--honey-dark);outline-offset:3px}
     <div class="ledge"></div><div class="chalkstick"></div>
   </header>
 
-  <h2 class="section-title">Pick a lesson</h2>
+  <div class="pickrow"><h2 class="section-title">Pick a lesson</h2><span class="notimer-pill"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M4 4l16 16"/></svg>No timers. Take your time.</span></div>
   <div class="lessons" id="lessons"></div>
 
   <section class="library" aria-label="Your library">
     <header><h2>Your library</h2><span class="count" id="book-count"></span></header>
     <div class="shelf" id="shelf"></div>
+    <p class="shelfhint" id="shelf-hint">Tap a book to read the maths fact inside.</p>
   </section>
 
-  <div class="foot">
-    <button class="toggle" id="speak-toggle" aria-pressed="true">Read questions aloud: on</button>
-    <span>Grown-ups: use the − and + on each lesson to change the level.</span>
-  </div>
+  <section class="grownups" aria-label="Settings for grown-ups">
+    <h2>For grown-ups</h2>
+    <div class="setrow"><span class="setlabel">Sound</span><button class="toggle" id="sound-toggle"></button></div>
+    <div class="setrow" id="voice-row"><label class="setlabel" for="voice-select">Voice</label><select id="voice-select"></select><button class="toggle" id="voice-test">Try it</button></div>
+    <div class="setrow"><span class="setlabel">After a right answer</span><button class="toggle" id="next-toggle"></button></div>
+    <p>There are no timers anywhere in the game. Questions never run out of time, and nothing moves on until any speaking has finished. Use the − and + on each lesson to change its level.</p>
+  </section>
 </section>
 
 <!-- PLAY -->
 <section id="play" class="wrap" style="gap:14px" hidden>
   <div class="playtop">
     <button class="back" id="back">← Lessons</button>
-    <h2 id="play-title"></h2>
-    <button class="speak" id="say-again" aria-label="Read the question again">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#5e3b21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#e9b53c"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+    <div class="ptitle"><h2 id="play-title"></h2><span class="notimer"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/><path d="M4 4l16 16"/></svg>No timer</span></div>
+    <button class="speak" id="say-again" aria-label="Hear the question again">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5e3b21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M9 9.5v5h2l3 2.5v-10L11 9.5H9z" fill="#e9b53c"/></svg>
+      <span>Again</span>
     </button>
+    <button class="speak" id="sound-btn" aria-label="Sound" aria-pressed="true"></button>
   </div>
   <div class="progress" id="progress" aria-label="Books earned this lesson"></div>
 
@@ -234,10 +290,24 @@ button:focus-visible{outline:3px solid var(--honey-dark);outline-offset:3px}
         <button class="key check" data-k="check" id="check">Check</button>
       </div>
       <div class="choices" id="choices" hidden></div>
+      <button class="btn" id="go-next" hidden>Next question →</button>
       <div class="explain" id="explain" hidden></div>
     </div>
   </div>
 </section>
+
+<!-- BOOK VIEWER -->
+<div class="bookview" id="bookview" hidden>
+  <div class="bookcard" role="dialog" aria-modal="true" aria-labelledby="bv-title">
+    <div class="bookspine" id="bv-spine"></div>
+    <div class="bookpage">
+      <p class="bv-title" id="bv-title"></p>
+      <p class="bv-fact" id="bv-fact"></p>
+      <p class="bv-extra" id="bv-extra"></p>
+      <div class="bv-btns"><button class="btn plain" id="bv-read">Read it to me</button><button class="btn" id="bv-close">Close</button></div>
+    </div>
+  </div>
+</div>
 
 <!-- ROUND END -->
 <section id="end" class="wrap" hidden>
@@ -261,52 +331,78 @@ const bookHeight = i => 40 + ((i * 13) % 5) * 5;
 
 /* ================= storage ================= */
 const KEY = 'matildalgebra.v1';
-let S = { books: 0, levels: { pv: 1, nl: 1, count: 1, add: 1 }, speak: true };
-try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) S = { ...S, ...s, levels: { ...S.levels, ...(s.levels || {}) } }; } catch (e) {}
+let S = { books: 0, facts: [], levels: { pv: 1, nl: 1, count: 1, add: 1 }, sound: true, voice: null, autoNext: true };
+try {
+  const s = JSON.parse(localStorage.getItem(KEY));
+  if (s) { S = { ...S, ...s, levels: { ...S.levels, ...(s.levels || {}) } }; if ('speak' in s && !('sound' in s)) S.sound = s.speak; delete S.speak; }
+} catch (e) {}
+if (!Array.isArray(S.facts)) S.facts = [];
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
 
-/* ================= speech ================= */
-let voice = null;
-function pickVoice() {
-  if (!('speechSynthesis' in window)) return;
-  const vs = speechSynthesis.getVoices();
-  voice = vs.find(v => v.lang === 'en-GB' && /Serena|Kate|Martha|Stephanie|Female|Libby|Sonia/i.test(v.name)) || vs.find(v => v.lang === 'en-GB') || vs.find(v => /^en/.test(v.lang)) || null;
+/* ================= speech =================
+   iPads ship novelty and robotic "Eloquence" voices (Grandma, Rocko, Bubbles...). If the page just takes the first
+   en-GB voice it often lands on one of those, so voices are filtered and ranked, and a grown-up can pick one. */
+const NOVELTY = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Deranged|Good News|Hysterical|Jester|Junior|Kathy|Organ|Pipe Organ|Princess|Ralph|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley)\b/i;
+const GOOD = /Serena|Kate|Martha|Stephanie|Daniel|Arthur|Libby|Sonia|Hazel|Google UK English|Karen|Moira|Tessa|Samantha/i;
+const hasSpeech = 'speechSynthesis' in window;
+let voices = [], voice = null, uiReady = false;
+function voiceScore(v) {
+  let sc = 0;
+  if (v.lang === 'en-GB' || v.lang === 'en_GB') sc += 100; else if (/^en/.test(v.lang)) sc += 20;
+  if (/Premium/i.test(v.name)) sc += 40; else if (/Enhanced|Natural|Neural/i.test(v.name)) sc += 30;
+  if (GOOD.test(v.name)) sc += 25;
+  if (v.localService) sc += 2;
+  return sc;
 }
-if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function loadVoices() {
+  if (!hasSpeech) return;
+  voices = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang) && !NOVELTY.test(v.name)).sort((a, b) => voiceScore(b) - voiceScore(a));
+  voice = (S.voice && voices.find(v => v.name === S.voice)) || voices[0] || null;
+  if (uiReady) renderSettings();
+}
+if (hasSpeech) { loadVoices(); speechSynthesis.addEventListener ? speechSynthesis.addEventListener('voiceschanged', loadVoices) : (speechSynthesis.onvoiceschanged = loadVoices); }
+
+let current = null;   // keep a reference so Chrome doesn't garbage-collect the utterance and drop its end event
+// Speaks and resolves when finished. A length-based timeout covers browsers that never fire 'end'.
 function say(text, force) {
-  if (!('speechSynthesis' in window) || (!S.speak && !force) || !text) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-GB'; if (voice) u.voice = voice; u.rate = .9; u.pitch = 1.05;
-  speechSynthesis.speak(u);
+  return new Promise(resolve => {
+    if (!hasSpeech || (!S.sound && !force) || !text) return resolve();
+    const busy = speechSynthesis.speaking || speechSynthesis.pending;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = voice ? voice.lang : 'en-GB'; if (voice) u.voice = voice; u.rate = .95; u.pitch = 1;
+    let done = false;
+    const finish = () => { if (done) return; done = true; clearTimeout(timer); resolve(); };
+    const timer = setTimeout(finish, 2000 + text.length * 110);
+    u.onend = finish; u.onerror = finish;
+    current = u;
+    // Safari garbles an utterance queued in the same tick as cancel(), so leave a short gap.
+    setTimeout(() => speechSynthesis.speak(u), busy ? 120 : 0);
+  });
 }
+function hush() { if (hasSpeech) speechSynthesis.cancel(); }
+const wait = ms => new Promise(r => setTimeout(r, ms));
 const spokenOp = t => t === '+' ? 'plus' : t === MINUS ? 'take away' : t === '=' ? 'equals' : t;
 
 /* ================= drawings ================= */
-// Base-ten blocks: tens as sticks of ten, ones as single cubes.
+// Base-ten blocks: tens as sticks of ten, ones as single cubes. Captions are HTML, not SVG text,
+// so they can never overlap however the drawing is scaled or the screen is rotated.
 function blocksSVG(n, opts = {}) {
-  const t = Math.floor(n / 10), o = n % 10, u = opts.u || 13, g = 7;
-  let x = 4, s = '';
+  const t = Math.floor(n / 10), o = n % 10, u = 13, g = 7, H = u * 10 + 2;
+  let tens = '', ones = '';
   for (let i = 0; i < t; i++) {
-    s += `<rect x="${x}" y="4" width="${u}" height="${u * 10}" rx="2" fill="var(--tens)" stroke="#23507f" stroke-width="1.5"/>`;
-    for (let k = 1; k < 10; k++) s += `<line x1="${x}" x2="${x + u}" y1="${4 + k * u}" y2="${4 + k * u}" stroke="#23507f" stroke-width="1" opacity=".6"/>`;
-    x += u + g;
+    const x = 1 + i * (u + g);
+    tens += `<rect x="${x}" y="1" width="${u}" height="${u * 10}" rx="2" fill="var(--tens)" stroke="#23507f" stroke-width="1.5"/>`;
+    for (let k = 1; k < 10; k++) tens += `<line x1="${x}" x2="${x + u}" y1="${1 + k * u}" y2="${1 + k * u}" stroke="#23507f" stroke-width="1" opacity=".6"/>`;
   }
-  const tensW = x;
-  if (o) x += t ? 12 : 0;
-  const ox = x;
   for (let j = 0; j < o; j++) {
     const col = Math.floor(j / 5), row = j % 5;
-    s += `<rect x="${ox + col * (u + 4)}" y="${4 + u * 10 - (row + 1) * (u + 4) + 4}" width="${u}" height="${u}" rx="2" fill="var(--ones)" stroke="#9a5f12" stroke-width="1.5"/>`;
+    ones += `<rect x="${1 + col * (u + 4)}" y="${H - 1 - (row + 1) * u - row * 4}" width="${u}" height="${u}" rx="2" fill="var(--ones)" stroke="#9a5f12" stroke-width="1.5"/>`;
   }
-  if (o) x = ox + (o > 5 ? 2 : 1) * (u + 4);
-  const W = Math.max(x + 4, o ? ox + 58 : 0, t ? tensW + 4 : 0, 60), H = u * 10 + (opts.labels === false ? 10 : 34);
-  let lab = '';
-  if (opts.labels !== false) {
-    if (t) lab += `<text x="${tensW / 2}" y="${u * 10 + 28}" text-anchor="middle" font-size="15" font-weight="700" fill="var(--tens)">${plural(t, 'ten', 'tens')}</text>`;
-    if (o) lab += `<text x="${(ox + x) / 2}" y="${u * 10 + 28}" text-anchor="middle" font-size="15" font-weight="700" fill="#b86f10">${plural(o, 'one', 'ones')}</text>`;
-  }
-  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" style="font-family:var(--body)" role="img" aria-label="${plural(t, 'ten', 'tens')} and ${plural(o, 'one', 'ones')}">${s}${lab}</svg>`;
+  const tw = t * (u + g) - g + 2, ow = (o > 5 ? 2 : 1) * (u + 4) - 4 + 2;
+  const grp = (w, body, cap, cls) => `<figure class="bgrp"><svg viewBox="0 0 ${w} ${H}" style="aspect-ratio:${w}/${H}" aria-hidden="true">${body}</svg><figcaption class="${cls}">${cap}</figcaption></figure>`;
+  const head = opts.title !== undefined ? `<div class="btitle">${opts.title}</div>` : '';
+  return `<div class="blocks${opts.small ? ' small' : ''}" role="img" aria-label="${plural(t, 'ten', 'tens')} and ${plural(o, 'one', 'ones')}">${head}<div class="brow">${t ? grp(tw, tens, plural(t, 'ten', 'tens'), 'tcap') : ''}${o ? grp(ow, ones, plural(o, 'one', 'ones'), 'ocap') : ''}</div></div>`;
 }
 
 // Number line. ticks: values; labels: values to print; arrow: value; jumps: [{from,to,label}]; marks: values with a dot.
@@ -417,21 +513,25 @@ function genCompare(level) {
   else { b = rnd(11, 99); if (b === a) b = a + (a < 99 ? 1 : -1); }
   if (Math.random() < .5) [a, b] = [b, a];
   const ans = a < b ? '<' : a > b ? '>' : '=';
-  const word = { '<': 'less than', '>': 'more than', '=': 'equal to' };
+  const word = { '<': 'is less than', '>': 'is more than', '=': 'is equal to' };
   const ta = Math.floor(a / 10), tb = Math.floor(b / 10);
+  const key = `<div class="signkey"><span><b>&lt;</b> is less than</span><span><b>&gt;</b> is more than</span><span><b>=</b> is equal to</span></div><p class="tip">The open mouth always faces the bigger number.</p>`;
+  const pics = level < 3 ? `<div class="pair">${blocksSVG(a, { small: true, title: a })}${blocksSVG(b, { small: true, title: b })}</div>` : '';
   return {
-    lead: 'More, less or the same?',
+    lead: 'Which sign goes in the box?',
     tokens: [a, { choice: true }, b],
     choices: [{ v: '<', label: '<', sub: 'less than' }, { v: '>', label: '>', sub: 'more than' }, { v: '=', label: '=', sub: 'equal to' }],
     answer: ans,
-    say: `Is ${a} more than, less than, or equal to ${b}?`,
-    visual: level < 3 ? `<div style="display:flex;gap:26px;align-items:flex-end;justify-content:center;flex-wrap:wrap">${blocksSVG(a, { u: 10 })}${blocksSVG(b, { u: 10 })}</div>` : '',
+    say: `Compare ${a} and ${b}. Is ${a} less than, more than, or equal to ${b}?`,
+    fact: `${a} ${ans} ${b}`, factWords: `${a} ${word[ans]} ${b}`,
+    after: `${a} ${word[ans]} ${b}.`,
+    visual: `<div class="cmp">${key}${pics}</div>`,
     explain: () => {
       let why;
       if (a === b) why = `They are the same number, so ${a} = ${b}.`;
       else if (ta !== tb) why = `Look at the tens first. ${a} has ${plural(ta, 'ten', 'tens')} and ${b} has ${plural(tb, 'ten', 'tens')}.`;
       else why = `They both have ${plural(ta, 'ten', 'tens')}, so look at the ones: ${a % 10} and ${b % 10}.`;
-      return `<p><b>${a} ${ans} ${b}</b>: ${a} is ${word[ans]} ${b}.</p><p>${why}</p><p>The open mouth of the sign always faces the bigger number.</p>`;
+      return `<p class="bigfact">${a} ${ans.replace('<', '&lt;').replace('>', '&gt;')} ${b}</p><p><b>${a} ${word[ans]} ${b}.</b> ${why}</p>${key}`;
     }
   };
 }
@@ -450,6 +550,7 @@ function genNL(level) {
   const step = cfg.ticks.length > 1 ? cfg.ticks[1] - cfg.ticks[0] : 0;
   return {
     lead, tokens: [B(ans, tol)],
+    fact: ans % 10 === 0 ? `${ans} is ${plural(ans / 10, 'ten', 'tens')}` : `${ans} is between ${ans - ans % 10} and ${ans - ans % 10 + 10}`,
     say: lead,
     visual: lineSVG({ ...cfg, arrow: ans }),
     explain: () => {
@@ -488,6 +589,7 @@ function genCount(level) {
   };
   return {
     lead, tokens, seq: true,
+    fact: `${back ? 'Counting back' : 'Counting'} in ${step}s: ${seq.join(', ')}`,
     say: `${lead}. ` + seq.map((v, i) => blanks.includes(i) ? 'what number' : v).join(', '),
     visual: level < 3 ? hopLine(false) : '',
     explain: () => `<div class="pic">${hopLine(true)}</div><p>Each jump is ${back ? 'back ' : ''}<b>${step}</b>. ${seq.join(', ')}.</p>`
@@ -530,7 +632,10 @@ function genAdd(level) {
   return mk(tokens, `${a} ${spokenOp(op)} ${b} equals what number?`, jumpLine(a, op === '+' ? b : -b), explainText);
 
   function mk(tokens, sayText, pic, text) {
-    return { lead: op === MINUS ? 'Take away' : 'Work it out', tokens, say: sayText, visual: '', explain: () => `<div class="pic">${pic}</div><p>${text}</p>` };
+    const v = tokens.map(t => typeof t === 'object' ? t.a : t);           // [x, op, y, '=', z]
+    const fact = v.join(' ');
+    const fact2 = v[1] === '+' ? `So ${v[4]} ${MINUS} ${v[2]} = ${v[0]}` : `So ${v[4]} + ${v[2]} = ${v[0]}`;
+    return { lead: op === MINUS ? 'Take away' : 'Work it out', tokens, say: sayText, visual: '', fact, fact2, explain: () => `<div class="pic">${pic}</div><p>${text}</p>` };
   }
 }
 
@@ -552,6 +657,45 @@ const LESSONS = [
 const lessonById = id => LESSONS.find(l => l.id === id);
 const ROUND = 10;
 
+/* ================= facts and books ================= */
+const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function factOf(q) {
+  if (q.fact) return q.fact;
+  const out = [];
+  for (const t of q.tokens) {
+    if (typeof t === 'number') out.push(String(t));
+    else if (typeof t === 'string') out.push(t);
+    else if (t.w) out.push(t.w);
+    else if (t.sep) out[out.length - 1] += t.sep;
+    else if (t.choice) out.push(q.answer);
+    else out.push(String(t.a));
+  }
+  return out.join(' ');
+}
+// Turn a written fact into words for the voice.
+const spoken = t => String(t).replace(/</g, ' is less than ').replace(/>/g, ' is more than ').replace(/\+/g, ' plus ').replace(/−/g, ' take away ').replace(/=/g, ' equals ').replace(/\s+/g, ' ').trim();
+const LEGACY_FACT = 'This is one of your very first books.';
+
+function openBook(i) {
+  const b = bookAt(i);
+  $('bv-spine').style.background = bookColour(i);
+  $('bv-title').textContent = `Book ${i + 1}${b.l ? ' · ' + lessonById(b.l).name : ''}`;
+  $('bv-fact').textContent = b.f;
+  $('bv-extra').textContent = b.x || (b.legacy ? 'New books have a maths fact written inside.' : '');
+  $('bookview').hidden = false;
+  $('bv-close').focus();
+  say(b.legacy ? b.f : spoken(b.f) + (b.x ? '. ' + spoken(b.x) : ''));
+}
+function bookAt(i) {
+  const legacy = S.books - S.facts.length;       // books earned before facts were stored
+  if (i < legacy) return { f: LEGACY_FACT, legacy: true };
+  return S.facts[i - legacy] || { f: LEGACY_FACT, legacy: true };
+}
+function closeBook() { $('bookview').hidden = true; hush(); }
+$('bv-close').addEventListener('click', closeBook);
+$('bv-read').addEventListener('click', () => { const t = $('bv-fact').textContent, x = $('bv-extra').textContent; say(spoken(t) + (x ? '. ' + spoken(x) : ''), true); });
+$('bookview').addEventListener('click', e => { if (e.target === $('bookview')) closeBook(); });
+
 /* ================= home ================= */
 function renderHome() {
   $('lessons').innerHTML = LESSONS.map(l => `
@@ -562,14 +706,40 @@ function renderHome() {
         <span class="lvbtns"><button data-lv="${l.id}" data-d="-1" aria-label="Easier" ${S.levels[l.id] <= 1 ? 'disabled' : ''}>−</button><button data-lv="${l.id}" data-d="1" aria-label="Harder" ${S.levels[l.id] >= 3 ? 'disabled' : ''}>+</button></span></div>`}
     </div>`).join('');
   $('book-count').textContent = S.books === 1 ? '1 book earned' : `${S.books} books earned`;
-  const show = Math.min(S.books, 80);
+  const show = Math.min(S.books, 60);
   let shelf = '';
-  for (let i = S.books - show; i < S.books; i++) shelf += `<span class="spine" style="height:${bookHeight(i)}px;background:${bookColour(i)}"></span>`;
-  if (S.books > show) shelf += `<span class="more">and ${S.books - show} more</span>`;
-  if (!S.books) shelf = '<span class="empty">Every right answer puts a new book on this shelf.</span>';
+  if (S.books > show) shelf += `<span class="more">${S.books - show} older books, then</span>`;
+  for (let i = S.books - show; i < S.books; i++) {
+    const b = bookAt(i);
+    shelf += `<button class="spine" data-book="${i}" style="height:${bookHeight(i) + 8}px;background:${bookColour(i)}" aria-label="Book ${i + 1}: ${esc(b.legacy ? 'an early book' : spoken(b.f))}" title="${esc(b.f)}"></button>`;
+  }
+  if (!S.books) shelf = '<span class="empty">Every right answer puts a new book on this shelf, with a maths fact inside.</span>';
   $('shelf').innerHTML = shelf;
-  $('speak-toggle').setAttribute('aria-pressed', String(S.speak));
-  $('speak-toggle').textContent = 'Read questions aloud: ' + (S.speak ? 'on' : 'off');
+  $('shelf-hint').hidden = !S.books;
+  renderSettings();
+}
+function renderSettings() {
+  $('sound-toggle').textContent = S.sound ? 'On' : 'Off';
+  $('sound-toggle').setAttribute('aria-pressed', String(S.sound));
+  $('next-toggle').textContent = S.autoNext ? 'Move on by itself' : 'Wait for the Next button';
+  $('next-toggle').setAttribute('aria-pressed', String(!S.autoNext));
+  $('voice-row').hidden = !hasSpeech || !voices.length || !S.sound;
+  const sel = $('voice-select');
+  const current = voice ? voice.name : '';
+  sel.innerHTML = voices.map(v => `<option value="${esc(v.name)}"${v.name === current ? ' selected' : ''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('');
+  renderSoundBtn();
+}
+function renderSoundBtn() {
+  const b = $('sound-btn');
+  b.setAttribute('aria-pressed', String(S.sound));
+  b.setAttribute('aria-label', S.sound ? 'Sound is on. Tap to turn it off.' : 'Sound is off. Tap to turn it on.');
+  b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#5e3b21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="${S.sound ? '#e9b53c' : '#d9c7a3'}"/>${S.sound ? '<path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>' : '<path d="M16 9l6 6M22 9l-6 6"/>'}</svg><span>${S.sound ? 'Sound on' : 'Sound off'}</span>`;
+  $('say-again').hidden = !S.sound;
+}
+function toggleSound() {
+  S.sound = !S.sound; save();
+  if (!S.sound) hush();
+  renderSettings();
 }
 $('lessons').addEventListener('click', e => {
   const lv = e.target.closest('[data-lv]');
@@ -577,35 +747,44 @@ $('lessons').addEventListener('click', e => {
   const go = e.target.closest('[data-go]');
   if (go) startRound(go.dataset.go);
 });
-$('speak-toggle').addEventListener('click', () => { S.speak = !S.speak; save(); renderHome(); if (S.speak) say('I will read the questions out loud.'); else if ('speechSynthesis' in window) speechSynthesis.cancel(); });
+$('shelf').addEventListener('click', e => { const b = e.target.closest('[data-book]'); if (b) openBook(Number(b.dataset.book)); });
+$('sound-toggle').addEventListener('click', () => { toggleSound(); if (S.sound) say('Sound is on.'); });
+$('sound-btn').addEventListener('click', () => { toggleSound(); if (S.sound) say('Sound is on.'); });
+$('next-toggle').addEventListener('click', () => { S.autoNext = !S.autoNext; save(); renderSettings(); });
+$('voice-select').addEventListener('change', e => { S.voice = e.target.value; save(); voice = voices.find(v => v.name === S.voice) || voice; say('Hello! I will read the questions to you.'); });
+$('voice-test').addEventListener('click', () => say('Hello! 54 equals 50 plus 4.', true));
 
 /* ================= play ================= */
 let R = null;   // round state
 let Q = null;   // current question state
+let qid = 0;    // bumps whenever the question or screen changes, so delayed steps can tell they are stale
 
 function show(id) { for (const s of ['home', 'play', 'end']) $(s).hidden = s !== id; window.scrollTo(0, 0); }
 
 function startRound(id) {
   const lesson = lessonById(id);
-  R = { lesson, i: 0, first: 0, books: 0, streak: 0, results: [], lastSay: null };
+  R = { lesson, i: 0, first: 0, books: 0, streak: 0, results: [], newBooks: [], lastKey: null };
   $('play-title').textContent = lesson.name;
+  renderSoundBtn();
   show('play');
-  renderProgress();
   nextQuestion();
 }
 
 function generate() {
   const l = R.lesson;
-  let q, tries = 0;
+  let q, tries = 0, src = l;
   do {
-    if (l.test) { const src = pick(LESSONS.filter(x => !x.test)); q = src.gen(S.levels[src.id]); }
-    else q = l.gen(S.levels[l.id]);
+    src = l.test ? pick(LESSONS.filter(x => !x.test)) : l;
+    q = src.gen(S.levels[src.id]);
   } while (tries++ < 10 && JSON.stringify(q.tokens) === R.lastKey);
   R.lastKey = JSON.stringify(q.tokens);
+  q.src = src.id;
   return q;
 }
 
 function nextQuestion() {
+  qid++;
+  $('magic').classList.remove('on'); $('magic').innerHTML = '';
   const q = generate();
   const blanks = q.tokens.filter(t => t && typeof t === 'object' && 'a' in t);
   Q = { q, blanks: blanks.map(b => ({ ...b, val: '' })), active: 0, attempts: 0, locked: false };
@@ -615,12 +794,11 @@ function nextQuestion() {
   $('desk').hidden = !q.visual;
   $('feedback').textContent = ''; $('feedback').className = 'feedback';
   $('explain').hidden = true;
+  $('go-next').hidden = true;
   const isChoice = !!q.choices;
   $('pad').hidden = isChoice;
   $('choices').hidden = !isChoice;
-  if (isChoice) {
-    $('choices').innerHTML = q.choices.map(c => `<button class="choice" data-c="${c.v}"><b>${c.label}</b><small>${c.sub}</small></button>`).join('');
-  }
+  if (isChoice) $('choices').innerHTML = q.choices.map(c => `<button class="choice" data-c="${c.v}"><b>${esc(c.label)}</b><small>${c.sub}</small></button>`).join('');
   setPad(true);
   renderEq();
   renderProgress();
@@ -636,7 +814,7 @@ function renderEq() {
     if (typeof t === 'string') return `<span class="op">${t}</span>`;
     if (t.w) return `<span class="w">${t.w}</span>`;
     if (t.sep) return `<span class="sep">${t.sep}</span>`;
-    if (t.choice) return `<span class="blank sym${Q.symState ? ' ' + Q.symState : ''}" aria-label="missing sign">${Q.sym || ''}</span>`;
+    if (t.choice) return `<span class="blank sym${Q.symState ? ' ' + Q.symState : ''}" aria-label="missing sign">${esc(Q.sym || '')}</span>`;
     const i = bi++, b = Q.blanks[i];
     const cls = ['blank'];
     if (b.state) cls.push(b.state);
@@ -649,19 +827,17 @@ function renderEq() {
 }
 
 function renderProgress() {
-  let s = '';
+  let s = '', k = 0;
   for (let i = 0; i < ROUND; i++) {
     const r = R.results[i];
-    if (r === 'first' || r === 'second') s += `<span class="slot book${r === 'first' ? ' star' : ''}" style="background:${bookColour(S.books - R.books + R.results.slice(0, i).filter(x => x !== 'missed').length)}"></span>`;
+    if (r === 'first' || r === 'second') { const idx = R.newBooks[k++]; s += `<span class="slot book${r === 'first' ? ' star' : ''}" style="background:${bookColour(idx)}"></span>`; }
     else if (r === 'missed') s += '<span class="slot missed"></span>';
     else s += `<span class="slot${i === R.i ? ' now' : ''}"></span>`;
   }
   $('progress').innerHTML = s;
 }
 
-function setPad(on) {
-  document.querySelectorAll('#pad .key').forEach(k => k.disabled = !on);
-}
+function setPad(on) { document.querySelectorAll('#pad .key').forEach(k => k.disabled = !on); }
 
 function press(k) {
   if (!Q || Q.locked || Q.q.choices) return;
@@ -700,72 +876,94 @@ function choose(v, btn) {
 const PRAISE = ['Brilliant!', 'Super!', 'Spot on!', 'Miss Honey is beaming!', 'Another book for the library!', 'Clever clogs!', 'Your brain is fizzing!', 'Even the Trunchbull is impressed.', 'Marvellous!', 'Top marks!'];
 const RETRY = ['Not quite. Have another go.', 'Nearly! Try again.', 'Hmm, not that one. One more try.'];
 
-function correct() {
+function earnBook() {
+  const q = Q.q, fact = factOf(q);
+  const rec = { f: fact, l: q.src };
+  if (q.fact2) rec.x = q.fact2;
+  // keep the shelf's index lined up: books before facts existed stay as legacy books
+  S.facts.push(rec);
+  S.books++;
+  if (S.facts.length > 1500) { S.facts.shift(); }
+  R.newBooks.push(S.books - 1);
+  R.books++;
+  save();
+}
+
+async function correct() {
+  const my = qid;
   Q.locked = true; setPad(false);
   const first = Q.attempts === 0;
   const blank = Q.blanks[0];
   R.results[R.i] = first ? 'first' : 'second';
   if (first) { R.first++; R.streak++; } else R.streak = 0;
-  R.books++; S.books++; save();
+  earnBook();
   let msg = pick(PRAISE);
   if (blank && blank.tol && Number(blank.val) !== blank.a) msg = `Good guess! It was ${blank.a}.`;
   $('feedback').textContent = msg; $('feedback').className = 'feedback good';
-  say(msg);
   renderProgress();
-  const magic = first && R.streak > 0 && R.streak % 3 === 0;
-  setTimeout(() => magic ? chalkMagic(advance) : advance(), 1300);
+  // Nothing moves on until the voice has finished (and at least a moment has passed when sound is off).
+  await Promise.all([say([msg, Q.q.after].filter(Boolean).join(' ')), wait(1200)]);
+  if (my !== qid) return;
+  if (first && R.streak > 0 && R.streak % 3 === 0) { await chalkMagic(); if (my !== qid) return; }
+  if (S.autoNext) advance();
+  else { $('pad').hidden = true; $('choices').hidden = true; $('go-next').hidden = false; $('go-next').focus(); }
 }
 
 function wrong() {
+  const my = qid;
   Q.attempts++; R.streak = 0;
   if (Q.attempts === 1) {
     const msg = pick(RETRY);
     $('feedback').textContent = msg; $('feedback').className = 'feedback bad';
     say(msg);
-    if (!Q.q.choices) {
-      Q.locked = true;
-      setTimeout(() => {
-        Q.blanks.forEach(b => { if (b.state === 'bad') b.val = ''; if (b.state === 'ok') b.state = 'ok'; else b.state = null; });
-        Q.active = Math.max(0, Q.blanks.findIndex(b => b.val === ''));
-        Q.locked = false; renderEq();
-      }, 800);
-    } else { setTimeout(() => { Q.symState = null; Q.sym = ''; renderEq(); }, 800); }
+    Q.locked = true;
+    setTimeout(() => {
+      if (my !== qid) return;
+      if (Q.q.choices) { Q.symState = null; Q.sym = ''; }
+      Q.blanks.forEach(b => { if (b.state === 'bad') { b.val = ''; b.state = null; } });
+      Q.active = Math.max(0, Q.blanks.findIndex(b => b.val === ''));
+      Q.locked = false; renderEq();
+    }, 800);
     return;
   }
-  // second miss: show the answer and why
+  // second miss: show the answer and why, and wait for her to tap Next
   Q.locked = true; setPad(false);
   R.results[R.i] = 'missed';
   Q.blanks.forEach(b => { b.val = String(b.a); b.state = 'shown'; });
-  if (Q.q.choices) { Q.sym = Q.q.answer; Q.symState = 'shown'; document.querySelectorAll('#choices .choice').forEach(c => { c.disabled = true; if (c.dataset.c === Q.q.answer) c.classList.add('right'); }); }
+  if (Q.q.choices) { Q.sym = Q.q.answer; Q.symState = 'shown'; }
   renderEq(); renderProgress();
   $('feedback').textContent = ''; $('feedback').className = 'feedback';
   $('explain').innerHTML = `<h3>Let's look at it together</h3>${Q.q.explain()}<button class="btn" id="next">Next question →</button>`;
   $('explain').hidden = false;
   $('pad').hidden = true; $('choices').hidden = true;
-  say("Let's look at it together.");
+  say("Let's look at it together. " + (Q.q.after || spoken(factOf(Q.q)) + '.'));
   $('next').addEventListener('click', advance);
   $('explain').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function advance() {
+  hush();
   R.i++;
   if (R.i >= ROUND) return endRound();
   nextQuestion();
 }
 
 const MAGIC = ['Three in a row!', 'Brain power!', 'Look, no hands!', 'Sparkling!'];
-function chalkMagic(done) {
+async function chalkMagic() {
   const text = pick(MAGIC);
   const letters = [...text].map((c, i) => `<span style="animation-delay:${.35 + i * .06}s">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
   $('magic').innerHTML = `<div class="stick"></div><p>${letters}<small style="animation-delay:${.5 + text.length * .06}s">The chalk is writing all by itself!</small></p>`;
   $('magic').classList.add('on');
-  say(text + ' The chalk is writing all by itself!');
-  setTimeout(() => { $('magic').classList.remove('on'); setTimeout(() => { $('magic').innerHTML = ''; done(); }, 250); }, 2600);
+  await Promise.all([say(text + ' The chalk is writing all by itself!'), wait(2600)]);
+  $('magic').classList.remove('on');
+  await wait(250);
+  $('magic').innerHTML = '';
 }
 
 const CAKE = `<svg viewBox="0 0 150 110"><ellipse cx="75" cy="98" rx="68" ry="9" fill="#f6f3ea" opacity=".9"/><path d="M20 55h110v40H20z" fill="#5a3320"/><path d="M20 55q55-26 110 0" fill="#7a4a2c"/><path d="M20 60q9 9 18 0t18 0t18 0t18 0t18 0t20 0" fill="none" stroke="#3a1f12" stroke-width="3"/><path d="M20 75h110" stroke="#3a1f12" stroke-width="3"/><path d="M75 26v18" stroke="#f6f3ea" stroke-width="4"/><path d="M75 12q6 7 0 12q-6-5 0-12z" fill="#e9b53c"/></svg>`;
 
 function endRound() {
+  qid++;
   const l = R.lesson, f = R.first;
   let title, extra = '';
   if (l.test) {
@@ -777,33 +975,45 @@ function endRound() {
     title = f >= 8 ? 'Wonderful work!' : f >= 5 ? 'Well done!' : 'Good effort!';
     if (f >= 9 && S.levels[l.id] < 3) { S.levels[l.id]++; save(); extra = `<p class="lvup">Level up! ${l.name} is now level ${S.levels[l.id]}.</p>`; }
   }
+  const chips = R.newBooks.map(i => `<button class="factchip" data-book="${i}" style="border-color:${bookColour(i)}">${esc(bookAt(i).f)}</button>`).join('');
   $('done').innerHTML = `
     <h2>${title}</h2>
     <div class="big">${f}<small> / ${ROUND}</small></div>
     <p>right first time, and <b>${plural(R.books, 'book', 'books')}</b> added to your library.</p>
     ${extra}
+    ${chips ? `<div class="newbooks"><h3>Facts in your new books</h3><div class="factchips">${chips}</div></div>` : ''}
     <div class="donebtns"><button class="btn" id="again">Play again</button><button class="btn plain" id="home-btn">Pick a lesson</button></div>`;
   show('end');
   say(`${title} You got ${f} right first time.`);
   $('again').addEventListener('click', () => startRound(l.id));
   $('home-btn').addEventListener('click', goHome);
+  $('done').querySelector('.factchips')?.addEventListener('click', e => { const b = e.target.closest('[data-book]'); if (b) openBook(Number(b.dataset.book)); });
 }
 
-function goHome() { if ('speechSynthesis' in window) speechSynthesis.cancel(); renderHome(); show('home'); }
+function goHome() { qid++; hush(); renderHome(); show('home'); }
 
 $('pad').addEventListener('click', e => { const k = e.target.closest('[data-k]'); if (k) press(k.dataset.k); });
 $('choices').addEventListener('click', e => { const c = e.target.closest('[data-c]'); if (c && !c.disabled) choose(c.dataset.c, c); });
 $('eq').addEventListener('click', e => { const b = e.target.closest('[data-b]'); if (b && Q && !Q.locked) { Q.active = Number(b.dataset.b); renderEq(); } });
 $('back').addEventListener('click', goHome);
+$('go-next').addEventListener('click', advance);
 $('say-again').addEventListener('click', () => Q && say(Q.q.say, true));
 document.addEventListener('keydown', e => {
+  if (!$('bookview').hidden) { if (e.key === 'Escape' || e.key === 'Enter') { closeBook(); e.preventDefault(); } return; }
   if ($('play').hidden || e.metaKey || e.ctrlKey || e.altKey) return;
   if (/^\d$/.test(e.key)) press(e.key);
   else if (e.key === 'Backspace') press('del');
-  else if (e.key === 'Enter') { const n = $('next'); if (!$('explain').hidden && n) n.click(); else press('check'); e.preventDefault(); }
+  else if (e.key === 'Enter') {
+    e.preventDefault();
+    const n = $('next');
+    if (!$('explain').hidden && n) n.click();
+    else if (!$('go-next').hidden) advance();
+    else press('check');
+  }
   else if (Q && Q.q.choices && ['<', '>', '='].includes(e.key)) { const c = document.querySelector(`#choices [data-c="${e.key}"]`); if (c && !c.disabled) choose(e.key, c); }
 });
 
+uiReady = true;
 renderHome();
 </script>
 </body>
