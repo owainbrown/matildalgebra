@@ -356,7 +356,7 @@ const bookHeight = i => 40 + ((i * 13) % 5) * 5;
 
 /* ================= storage ================= */
 const KEY = 'matildalgebra.v1';
-let S = { books: 0, facts: [], levels: { pv: 1, order: 1, nl: 1, count: 1, add: 1 }, sound: true, voice: null, autoNext: true };
+let S = { books: 0, facts: [], levels: { pv: 1, order: 1, nl: 1, count: 1, bonds: 1, add: 1 }, sound: true, voice: null, autoNext: true };
 try {
   const s = JSON.parse(localStorage.getItem(KEY));
   if (s) { S = { ...S, ...s, levels: { ...S.levels, ...(s.levels || {}) } }; if ('speak' in s && !('sound' in s)) S.sound = s.speak; delete S.speak; }
@@ -664,6 +664,63 @@ function genAdd(level) {
   }
 }
 
+/* ---------- Number Bonds: to 10, 20 and 100 ---------- */
+// Ten frames (one for 10, two for 20). given: red counters; extra: blue counters (the answer, shown in explanations); the rest are empty.
+function tenFrameSVG(total, given, extra = 0) {
+  const frames = total / 10, c = 44, gap = 18, fw = 5 * c, W = frames * fw + (frames - 1) * gap + 4, H = 2 * c + 4;
+  let s = '';
+  for (let f = 0; f < frames; f++) {
+    const ox = 2 + f * (fw + gap);
+    s += `<rect x="${ox}" y="2" width="${fw}" height="${2 * c}" rx="6" fill="#fffdf6" stroke="#2b2320" stroke-width="2.5"/>`;
+    for (let k = 1; k < 5; k++) s += `<line x1="${ox + k * c}" x2="${ox + k * c}" y1="2" y2="${2 + 2 * c}" stroke="#2b2320" stroke-width="1.5"/>`;
+    s += `<line x1="${ox}" x2="${ox + fw}" y1="${2 + c}" y2="${2 + c}" stroke="#2b2320" stroke-width="1.5"/>`;
+    for (let i = 0; i < 10; i++) {
+      const n = f * 10 + i, cx = ox + (i % 5) * c + c / 2, cy = 2 + Math.floor(i / 5) * c + c / 2;
+      if (n < given) s += `<circle cx="${cx}" cy="${cy}" r="15" fill="#c8553d" stroke="#7d2f20" stroke-width="2"/>`;
+      else if (n < given + extra) s += `<circle cx="${cx}" cy="${cy}" r="15" fill="#3b78c4" stroke="#23507f" stroke-width="2"/>`;
+    }
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="${given} counters in ${frames === 1 ? 'a ten frame' : 'two ten frames'}">${s}</svg>`;
+}
+
+function genBonds(level) {
+  const T = [10, 20, 100][level - 1];
+  let a;
+  if (T === 10) a = rnd(1, 9);
+  else if (T === 20) a = rnd(1, 19);
+  else { const r = Math.random(); a = r < .5 ? 10 * rnd(1, 9) : r < .75 ? 10 * rnd(0, 9) + 5 : (() => { let v; do v = rnd(11, 89); while (v % 5 === 0); return v; })(); }
+  const b = T - a;
+  const f = pick(['A', 'A', 'B', 'C', 'D']);
+  const tokens = f === 'A' ? [a, '+', B(b), '=', T] : f === 'B' ? [B(b), '+', a, '=', T] : f === 'C' ? [T, MINUS, a, '=', B(b)] : [T, '=', a, '+', B(b)];
+  const fact = f === 'C' ? `${T} ${MINUS} ${a} = ${b}` : `${a} + ${b} = ${T}`;
+  const fact2 = f === 'C' ? `So ${a} + ${b} = ${T}` : `So ${T} ${MINUS} ${a} = ${b}`;
+  const frame = T <= 20;
+
+  let pic, text;
+  if (frame) {
+    pic = tenFrameSVG(T, a, b);
+    if (T === 10) text = `${plural(a, 'red counter', 'red counters')} and ${b} blue make 10. <b>${a} + ${b} = 10</b>.`;
+    else if (a === 10) text = `10 and 10 make 20. <b>10 + 10 = 20</b>.`;
+    else if (a > 10) text = `${a} is 10 and ${a - 10}. ${a - 10} and ${b} make 10, so <b>${a} + ${b} = 20</b>.`;
+    else text = `${a} and ${10 - a} make 10, and another 10 makes 20. ${10 - a} + 10 = ${b}, so <b>${a} + ${b} = 20</b>.`;
+  } else if (a % 10 === 0) {
+    pic = lineSVG({ min: 0, max: 100, ticks: range(0, 100, 10), labels: range(0, 100, 10), jumps: [{ from: a, to: 100, label: '+' + b }], marks: [a], hideEndArrows: true });
+    text = `${a / 10} and ${b / 10} make 10, so ${a} and ${b} make 100. <b>${a} + ${b} = 100</b>.`;
+  } else {
+    const ten = Math.ceil(a / 10) * 10, J = [{ from: a, to: ten, label: '+' + (ten - a) }];
+    if (ten < 100) J.push({ from: ten, to: 100, label: '+' + (100 - ten) });
+    pic = lineSVG({ min: Math.floor(a / 10) * 10 - 4, max: 104, ticks: [a, ten, 100], labels: [a, ten, 100], jumps: J, marks: [a], hideEndArrows: true });
+    text = `Jump to the next ten first: ${a} + ${ten - a} = ${ten}.` + (ten < 100 ? ` Then ${ten} + ${100 - ten} = 100.` : '') +
+      ` Altogether that's ${ten < 100 ? `${ten - a} + ${100 - ten} = ` : ''}<b>${b}</b>, so ${a} + ${b} = 100.`;
+  }
+  return {
+    lead: f === 'C' ? 'Take away' : `Make ${T}`,
+    tokens, fact, fact2,
+    visual: frame ? tenFrameSVG(T, a) : '',
+    explain: () => `<div class="pic">${pic}</div><p>${text}</p>`
+  };
+}
+
 /* ---------- Compare and Order: Mrs Phelps's library ---------- */
 const SIGN_KEY = `<div class="signkey"><span><b>&lt;</b> is less than</span><span><b>&gt;</b> is more than</span><span><b>=</b> is equal to</span></div><p class="tip">The open mouth always faces the bigger number.</p>`;
 const signWord = { '<': 'is less than', '>': 'is more than', '=': 'is equal to' };
@@ -753,6 +810,7 @@ const ICONS = {
   pv: `<svg viewBox="0 0 48 48"><g fill="#3b78c4" stroke="#f6f3ea" stroke-width="1.2"><rect x="6" y="6" width="7" height="36" rx="1"/><rect x="16" y="6" width="7" height="36" rx="1"/></g><g fill="#e0902a" stroke="#f6f3ea" stroke-width="1.2"><rect x="28" y="35" width="7" height="7" rx="1"/><rect x="28" y="26" width="7" height="7" rx="1"/><rect x="37" y="35" width="7" height="7" rx="1"/></g></svg>`,
   nl: `<svg viewBox="0 0 48 48" stroke="#f6f3ea" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M3 32h42M8 27v10M18 29v6M28 29v6M38 27v10"/><path d="M28 24l-5-7h3v-9h4v9h3z" fill="#e9b53c" stroke="#e9b53c" stroke-width="1"/></svg>`,
   count: `<svg viewBox="0 0 48 48" fill="none" stroke-linecap="round"><path d="M3 38h42" stroke="#f6f3ea" stroke-width="2.5"/><path d="M6 36q7-18 14 0M20 36q7-18 14 0M34 36q5-13 10 -1" stroke="#e9b53c" stroke-width="2.5"/></svg>`,
+  bonds: `<svg viewBox="0 0 48 48"><rect x="4" y="14" width="40" height="20" rx="2" fill="none" stroke="#f6f3ea" stroke-width="2"/><path d="M12 14v20M20 14v20M28 14v20M36 14v20M4 24h40" stroke="#f6f3ea" stroke-width="1.5"/><g fill="#c8553d"><circle cx="8" cy="19" r="3"/><circle cx="16" cy="19" r="3"/><circle cx="24" cy="19" r="3"/><circle cx="32" cy="19" r="3"/><circle cx="40" cy="19" r="3"/><circle cx="8" cy="29" r="3"/></g><g fill="#e9b53c"><circle cx="16" cy="29" r="3"/><circle cx="24" cy="29" r="3"/><circle cx="32" cy="29" r="3"/><circle cx="40" cy="29" r="3"/></g></svg>`,
   add: `<svg viewBox="0 0 48 48" stroke="#f6f3ea" stroke-width="4" stroke-linecap="round"><path d="M14 8v16M6 16h16M28 34h16"/><path d="M26 12h0" stroke="#e9b53c"/></svg>`,
   test: `<svg viewBox="0 0 48 48"><path d="M8 28h32v12H8z" fill="#5a3320"/><path d="M8 28q16-10 32 0" fill="#7a4a2c"/><path d="M8 30q4 4 8 0t8 0t8 0t8 0" fill="none" stroke="#3a1f12" stroke-width="2"/><path d="M24 12v8" stroke="#f6f3ea" stroke-width="2.5"/><path d="M24 8q3 3 0 5q-3-2 0-5z" fill="#e9b53c"/></svg>`
 };
@@ -761,6 +819,7 @@ const LESSONS = [
   { id: 'order', name: 'Compare and Order', blurb: "Help Mrs Phelps put the library books back in order", gen: genOrder },
   { id: 'nl', name: 'Number Lines', blurb: 'Where is the arrow pointing?', gen: genNL },
   { id: 'count', name: 'Counting Patterns', blurb: 'Count in 2s, 5s and 10s', gen: genCount },
+  { id: 'bonds', name: 'Number Bonds', blurb: 'Make 10, then 20, then 100', gen: genBonds },
   { id: 'add', name: 'Adding and Taking Away', blurb: 'Jump along the number line', gen: genAdd },
   { id: 'test', name: "The Trunchbull's Test", blurb: 'A bit of everything. Get 8 right first time to beat her!', test: true }
 ];
