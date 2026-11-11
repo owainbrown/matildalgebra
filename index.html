@@ -688,7 +688,7 @@ function genBonds(level) {
   let a;
   if (T === 10) a = rnd(1, 9);
   else if (T === 20) a = rnd(1, 19);
-  else { const r = Math.random(); a = r < .5 ? 10 * rnd(1, 9) : r < .75 ? 10 * rnd(0, 9) + 5 : (() => { let v; do v = rnd(11, 89); while (v % 5 === 0); return v; })(); }
+  else a = Math.random() < .5 ? 10 * rnd(1, 9) : 10 * rnd(0, 9) + 5;
   const b = T - a;
   const f = pick(['A', 'A', 'B', 'C', 'D']);
   const tokens = f === 'A' ? [a, '+', B(b), '=', T] : f === 'B' ? [B(b), '+', a, '=', T] : f === 'C' ? [T, MINUS, a, '=', B(b)] : [T, '=', a, '+', B(b)];
